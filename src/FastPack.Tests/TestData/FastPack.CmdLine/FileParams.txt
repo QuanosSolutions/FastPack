@@ -1,0 +1,4 @@
+-i
+C:\input
+-o
+C:\out.fup

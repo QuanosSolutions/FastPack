@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="SelfContained;PublishTrimmed;RuntimeIdentifier">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IsPackable>false</IsPackable>
+    <!-- START: Default-Values for properties to prevent errors during solution publish (TreatAsLocalProperty ensures no override of property values by CLI) -->
+    <SelfContained>false</SelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../FastPack.snk</AssemblyOriginatorKeyFile>
+	<!-- END -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestData\FastPack.CmdLine\FileParams.json" />
+    <None Remove="TestData\FastPack.CmdLine\FileParams.txt" />
+    <None Remove="TestData\FastPack.CmdLine\FileParams.xml" />
+    <None Remove="TestData\FastPack.Lib.Diff\first.fup" />
+    <None Remove="TestData\FastPack.Lib.Diff\second.fup" />
+    <None Remove="TestData\FastPack.Lib.Unpackers\TestCase1.fup" />
+    <None Remove="TestData\FastPack.Lib.Unpackers\TestCase2.fup" />
+    <None Remove="TestData\FastPack.Lib.Unpackers\TestCase3.fup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\FastPack.CmdLine\FileParams.json" />
+    <EmbeddedResource Include="TestData\FastPack.CmdLine\FileParams.txt" />
+    <EmbeddedResource Include="TestData\FastPack.CmdLine\FileParams.xml" />
+    <EmbeddedResource Include="TestData\FastPack.Lib.Diff\first.fup" />
+    <EmbeddedResource Include="TestData\FastPack.Lib.Diff\second.fup" />
+    <EmbeddedResource Include="TestData\FastPack.Lib.Unpackers\TestCase1.fup" />
+    <EmbeddedResource Include="TestData\FastPack.Lib.Unpackers\TestCase2.fup" />
+    <EmbeddedResource Include="TestData\FastPack.Lib.Unpackers\TestCase3.fup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="6.7.0" />
+    <PackageReference Include="FluentAssertions.Analyzers" Version="0.17.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Moq" Version="4.18.1" />
+    <PackageReference Include="Moq.Analyzers" Version="0.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastPack.Lib\FastPack.Lib.csproj" />
+    <ProjectReference Include="..\FastPack.TestFramework\FastPack.TestFramework.csproj" />
+    <ProjectReference Include="..\FastPack\FastPack.csproj" />
+  </ItemGroup>
+
+  <Target Name="CopyNativeLinuxDependencies" AfterTargets="Build" Condition="'$(NativeDependencyPlatform)' == 'linux-x64'">
+    <ItemGroup>
+      <NativeDependencies Include="$(PkgMono_Posix_NETStandard)/runtimes/linux-x64/native/*.*" />
+    </ItemGroup>
+    <Message Importance="High" Text="&gt;&gt; Copying @(NativeDependencies) to $(TargetDir)" />
+    <Copy SourceFiles="@(NativeDependencies)" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+  <Target Name="CopyNativeOsxDependencies" AfterTargets="Build" Condition="'$(NativeDependencyPlatform)' == 'osx-x64'">
+    <ItemGroup>
+      <NativeDependencies Include="$(PkgMono_Posix_NETStandard)/runtimes/osx/native/*.*" />
+    </ItemGroup>
+    <Message Importance="High" Text="&gt;&gt; Copying @(NativeDependencies) to $(TargetDir)" />
+    <Copy SourceFiles="@(NativeDependencies)" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+</Project>

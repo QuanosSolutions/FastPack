@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Company>Quanos Solutions GmbH</Company>
+    <Authors>Quanos Solutions GmbH</Authors>
+    <Product>FastPack</Product>
+    <Copyright>Copyright © Quanos Solutions GmbH</Copyright>
+	<PublishSingleFile Condition="'$(Configuration)' != 'Debug'">true</PublishSingleFile>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <Description>FastPack is a lightning fast deduplication (de)compressor that is particularly useful for compressing and decompressing build artifacts containing a small to high degree of duplicate files.</Description>
+    <DebugType>embedded</DebugType>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyFile>../FastPack.snk</AssemblyOriginatorKeyFile>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'GlobalTool'">
+    <PublishSingleFile>false</PublishSingleFile>
+    <RuntimeIdentifier></RuntimeIdentifier>
+    <RuntimeIdentifiers></RuntimeIdentifiers>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>fastpack</ToolCommandName>
+    <PackageOutputPath>bin/nuget</PackageOutputPath>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true' OR '$(CI_PIPELINE_ID)' != ''">true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+    <DeterministicSourcePaths Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</DeterministicSourcePaths>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastPack.Lib\FastPack.Lib.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="FastPack.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab" />
+    <InternalsVisibleTo Include="FastPack.Windows.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab"/>
+    <InternalsVisibleTo Include="FastPack.Linux.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab"/>
+    <InternalsVisibleTo Include="FastPack.OSX.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab"/>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7"/>
+  </ItemGroup>
+  <Target Name="AuthenticodeSignAssembly" AfterTargets="Compile" Condition="'$(SignFastpackAssemblies)' == 'true'">
+    <PropertyGroup>
+      <SignToolExecutablePath>C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe</SignToolExecutablePath>
+      <TimeStampServer>http://timestamp.digicert.com</TimeStampServer>
+      <AuthenticodeSignCertificateName>Quanos Solutions GmbH</AuthenticodeSignCertificateName>
+      <SignToolExecutablePathWithParameters>"$(SignToolExecutablePath)" sign /q /a /n "$(AuthenticodeSignCertificateName)" /t $(TimeStampServer)</SignToolExecutablePathWithParameters>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Authenticode signing: $(AssemblyName)$(TargetExt)" />
+    <Exec Command="$(SignToolExecutablePathWithParameters) &quot;$(IntermediateOutputPath)$(AssemblyName)$(TargetExt)&quot;" ConsoleToMsBuild="true" />
+  </Target>
+</Project>

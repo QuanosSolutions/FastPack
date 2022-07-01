@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="SelfContained;PublishTrimmed;RuntimeIdentifier">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IsPackable>false</IsPackable>
+    <!-- START: Default-Values for properties to prevent errors during solution publish (TreatAsLocalProperty ensures no override of property values by CLI) -->
+    <SelfContained>false</SelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../FastPack.snk</AssemblyOriginatorKeyFile>
+	<!-- END -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="FastPack.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab" />
+    <InternalsVisibleTo Include="FastPack.Windows.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab" />
+    <InternalsVisibleTo Include="FastPack.Linux.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab" />
+    <InternalsVisibleTo Include="FastPack.OSX.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100a58082cf1bccfaa66f099aaf52c3b64ca38267f5b809f52cba53938079ba280cf65373089373ba048b2ca9d07cbc32385eaddfc872bf2e33ce7481d0ab8dc480b2a039933258bed8b028bfb10f772d8551751a772dfb7a13a0ee0b2a50accf85b4dbc0298a93f5937f040981d16fb35a2c4802b551f8aedde3839b9789e58cab" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="TestData\FilesToUnpack\**" />
+    <Compile Remove="TestData\Misc\**" />
+    <EmbeddedResource Remove="TestData\FilesToUnpack\**" />
+    <EmbeddedResource Remove="TestData\Misc\**" />
+    <None Remove="TestData\FilesToUnpack\**" />
+    <None Remove="TestData\Misc\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestData\FilesToPack\EmptyFile.txt" />
+    <None Remove="TestData\FilesToPack\RdfFile.rdf" />
+    <None Remove="TestData\FilesToPack\SmallFile.txt" />
+    <None Remove="TestData\IntegrationData\example.fup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\FilesToPack\EmptyFile.txt" />
+    <EmbeddedResource Include="TestData\FilesToPack\RdfFile.rdf" />
+    <EmbeddedResource Include="TestData\FilesToPack\SmallFile.txt" />
+    <EmbeddedResource Include="TestData\IntegrationData\example.fup" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastPack.Lib\FastPack.Lib.csproj" />
+  </ItemGroup>
+
+</Project>

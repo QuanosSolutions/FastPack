@@ -1,0 +1,31 @@
+test-osx:
+  stage: test
+  tags:
+    - OSX-Build
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+    reports:
+      junit: '_Artifacts/TestResults/*.junit.xml'
+  script:
+  - |
+    Write-Host "> Running tests"
+    $projectPath = Join-Path $SourceDirPath 'FastPack.Tests/FastPack.Tests.csproj'
+    $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults/tests.junit.xml'
+    $dotnetArgs = @(
+      'test', "`"$projectPath`"",
+      '-c', $Q_Configuration,
+      '--nologo',
+      '-v', $Q_Verbosity,
+      '-l', "junit;LogFilePath=$testResultsFilePath",
+      '-r', 'osx-x64',
+      '-p:NativeDependencyPlatform=osx-x64'
+    )
+    & dotnet $dotnetArgs
+
+    if ($LastExitCode -ne 0) {
+      throw "Build Failed"
+    }

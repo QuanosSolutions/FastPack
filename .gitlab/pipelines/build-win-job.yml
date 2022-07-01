@@ -1,0 +1,30 @@
+build-win:
+  stage: build
+  tags:
+    - NET6
+    - Windows
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+  script:
+  - |
+    Write-Host "> Running build"
+    $solutionPath = Join-Path $SourceDirPath 'FastPack/FastPack.csproj'
+    $dotnetArgs = @(
+      'build', "`"$solutionPath`"",
+      '-c', $Q_Configuration,
+      '--nologo',
+      '--self-contained', 'true',
+      '-v', $Q_Verbosity,
+      '-r', 'win-x64',
+      '-p:IncludeNativeLibrariesForSelfExtract=true',
+      '-p:PublishTrimmed=true'
+    )
+    & dotnet $dotnetArgs
+
+    if ($LastExitCode -ne 0) {
+      throw "Build Failed"
+    }

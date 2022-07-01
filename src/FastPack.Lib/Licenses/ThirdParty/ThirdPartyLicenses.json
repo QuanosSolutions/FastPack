@@ -1,0 +1,16 @@
+﻿{
+	"libs": [
+		{
+			"name": "DotNet.Glob",
+			"file": "DotNet.Glob.txt"
+		},
+		{
+			"name": "Standart.Hash.xxHash",
+			"file": "Standart.Hash.xxHash.txt"
+		},
+		{
+			"name": "Mono.Posix.NETStandard",
+			"file": "Mono.Posix.NETStandard.txt"
+		}
+	]
+}

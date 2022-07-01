@@ -1,0 +1,32 @@
+test-linux:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:6.0.102-focal # https://hub.docker.com/_/microsoft-dotnet-sdk
+  tags:
+    - Kubernetes-PWSH
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+    reports:
+      junit: '_Artifacts/TestResults/*.junit.xml'
+  script:
+  - |
+    Write-Host "> Running tests"
+    $projectPath = Join-Path $SourceDirPath 'FastPack.Tests/FastPack.Tests.csproj'
+    $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults/tests.junit.xml'
+    $dotnetArgs = @(
+      'test', "`"$projectPath`"",
+      '-c', $Q_Configuration,
+      '--nologo',
+      '-v', $Q_Verbosity,
+      '-l', "junit;LogFilePath=$testResultsFilePath",
+      '-r', 'linux-x64',
+      '-p:NativeDependencyPlatform=linux-x64'
+    )
+    & dotnet $dotnetArgs
+
+    if ($LastExitCode -ne 0) {
+      throw "Build Failed"
+    }

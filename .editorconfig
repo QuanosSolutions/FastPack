@@ -1,0 +1,50 @@
+# Default settings:
+[*]
+# no extra newline at the end
+insert_final_newline = false
+# indent with tabs
+indent_style = tab
+# use 4 tabs
+indent_size = 4									
+# default line ending is CRLF
+end_of_line = crlf
+# trim whitespaces at the end
+trim_trailing_whitespace = true					
+
+# C# files
+[*.cs]
+# Use UTF-8 with BOM - Which is the default of VS
+charset = utf-8-bom								
+
+# XML Files
+[*.{xml,xsl,stt}]
+# use 2 tabs for xml files
+indent_size = 2									
+
+# CSPROJ Files
+[*.csproj]
+# use 2 tabs for xml files
+indent_size = 2
+# indent with spaces
+indent_style = space							
+
+# Powershell Files
+[*.{ps1,psm1,psd1}]
+# use 2 spaces for indention
+indent_size = 2
+# indent with spaces
+indent_style = space							
+
+# RESX Files
+[*.resx]
+# use 2 spaces for resx files
+indent_size = 2
+# indent with spaces
+indent_style = space							
+
+# GitLab pipelines file
+[*.yml]
+# use 2 spaces for resx files
+indent_size = 2
+# indent with spaces
+indent_style = space							

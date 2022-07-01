@@ -1,0 +1,26 @@
+package-globaltool:
+  stage: package
+  tags:
+    - NET6
+    - Windows
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: true
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+  script:
+  - |
+    Write-Host "> Creating global tool ..."
+
+    & build/CreateRelease.ps1 -CreateGlobalTool $true -CreateNugetPackage $false -CreateExecutables $false -Configuration $Q_Configuration -ReleaseRootDirectoryPath $ArtifactsDirectoryPath -Verbosity $Q_Verbosity -AuthenticodeSign $true
+
+    if ($LastExitCode -ne 0) {
+      throw "Packaging Failed"
+    }

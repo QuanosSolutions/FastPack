@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<args>
+    <arg>-i</arg>
+    <arg>C:\input</arg>
+    <arg>-o</arg>
+    <arg>C:\out.fup</arg>
+</args>

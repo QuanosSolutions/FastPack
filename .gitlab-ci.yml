@@ -1,0 +1,17 @@
+include:
+  - local: '.gitlab/pipelines/pipeline.yml'
+
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - when: always
+
+variables:
+  GIT_DEPTH: 1
+  Q_Configuration:
+    value: 'Release'
+    description: 'The configuration to build, test and package'
+  Q_Verbosity:
+    value: 'minimal'
+    description: 'The verbosity used for build, test and package'

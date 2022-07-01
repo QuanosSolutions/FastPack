@@ -1,0 +1,1 @@
+@call pwsh -ExecutionPolicy Bypass -c "& '%~dp0CreateRelease.ps1' %*" || PAUSE

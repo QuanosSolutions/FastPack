@@ -1,0 +1,8 @@
+<Project>
+	<PropertyGroup>
+		<SourceLinkUrl>https://raw.githubusercontent.com/QuanosSolutions/FastPack/{commit}/*</SourceLinkUrl>
+		<SourceLinkRootDirectory>$(MSBuildThisFileDirectory)</SourceLinkRootDirectory>
+		<SourceLinkCommit Condition="'$(SourceLinkCommit)' == '' and '$(CI_COMMIT_SHA)' != ''">$(CI_COMMIT_SHA)</SourceLinkCommit>
+		<PrivateRepositoryUrl>https://github.com/QuanosSolutions/FastPack.git</PrivateRepositoryUrl>
+	</PropertyGroup>
+</Project>

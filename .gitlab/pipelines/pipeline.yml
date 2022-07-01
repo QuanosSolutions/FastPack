@@ -1,0 +1,25 @@
+.default_before_script: &default_before_script
+  - |
+    $ErrorActionPreference = 'Stop'
+    Set-StrictMode -Version Latest
+
+    $LocalWorkingDirPath = (Get-Location).Path
+    $SourceDirPath = Join-Path $LocalWorkingDirPath 'src'
+    $ArtifactsDirectoryPath = Join-Path $LocalWorkingDirPath '_Artifacts'
+    $GitLabDirectoryPath = Join-Path $LocalWorkingDirPath '.gitlab'
+    $TestArtifactsOutputDir = Join-Path $ArtifactsDirectoryPath 'TestResults\Artifacts'
+    Write-Host "> Executing Job '$CI_JOB_NAME' in Stage '$CI_JOB_STAGE' in working directory '$LocalWorkingDirPath'"
+
+default:
+  before_script:
+    - *default_before_script
+  # after_script:
+  #   - Clean-Repository
+
+stages:
+  - build
+  - test
+  - package
+
+include:
+  - local: '.gitlab/pipelines/*-job.yml'

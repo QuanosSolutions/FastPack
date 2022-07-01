@@ -1,0 +1,32 @@
+test-win:
+  stage: test
+  tags:
+    - NET6
+    - Windows
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+    reports:
+      junit: '_Artifacts/TestResults/*.junit.xml'
+  script:
+  - |
+    Write-Host "> Running tests"
+    $projectPath = Join-Path $SourceDirPath 'FastPack.Tests/FastPack.Tests.csproj'
+    $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults/tests.junit.xml'
+    $dotnetArgs = @(
+      'test', "`"$projectPath`"",
+      '-c', $Q_Configuration,
+      '--nologo',
+      '-v', $Q_Verbosity,
+      '-l', "junit;LogFilePath=$testResultsFilePath",
+      '-r', 'win-x64',
+      '-p:NativeDependencyPlatform=win-x64'
+    )
+    & dotnet $dotnetArgs
+
+    if ($LastExitCode -ne 0) {
+      throw "Build Failed"
+    }

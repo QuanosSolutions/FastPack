@@ -1,0 +1,26 @@
+package-win:
+  stage: package
+  tags:
+    - NET6
+    - Windows
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: true
+  dependencies: []
+  needs: []
+  artifacts:
+    when: always
+    paths:
+      - '_Artifacts/**/*'
+  script:
+  - |
+    Write-Host "> Creating executable for windows ..."
+
+    & build/CreateRelease.ps1 -CreateGlobalTool $false -CreateNugetPackage $false -CreateExecutables $true -Configuration $Q_Configuration -ReleaseRootDirectoryPath $ArtifactsDirectoryPath -Runtime "win-x64" -Verbosity $Q_Verbosity -AuthenticodeSign $true
+
+    if ($LastExitCode -ne 0) {
+      throw "Packaging Failed"
+    }
