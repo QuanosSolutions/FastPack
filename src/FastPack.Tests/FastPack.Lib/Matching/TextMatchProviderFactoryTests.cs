@@ -16,6 +16,7 @@ public class TextMatchProviderFactoryTests
 		Dictionary<TextMatchProviderType, Type> typeMapping = new() {
 			{TextMatchProviderType.Glob, typeof(GlobTextMatchProvider)},
 			{TextMatchProviderType.Regex, typeof(RegexTextMatchProvider)},
+			{TextMatchProviderType.StartsWith, typeof(StartsWithTextMatchProvider)},
 		};
 
 		foreach (TextMatchProviderType providerType in Enum.GetValues<TextMatchProviderType>())

@@ -3,5 +3,6 @@
 public enum TextMatchProviderType
 {
 	Glob = 0,
-	Regex = 1
+	Regex = 1,
+	StartsWith = 2
 }
