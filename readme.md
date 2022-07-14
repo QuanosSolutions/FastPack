@@ -224,6 +224,7 @@ For the "pack" and "unpack" action you can provide a filter type (Parameter: -ft
 
 * [Glob](https://en.wikipedia.org/wiki/Glob_(programming)) (Default)
 * [Regex](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) (.NET Style)
+* [StartsWith](https://docs.microsoft.com/en-us/dotnet/api/system.string.startswith?view=net-6.0#system-string-startswith(system-string))
 
 The filter type is used to evaluate the filter expressions passed via the following parameters:
 

@@ -57,7 +57,7 @@ public class UnpackOptionsParser : IOptionsParser
 		await Logger.InfoLine();
 		await Logger.InfoLine("  -ft|--filter-type");
 		await Logger.InfoLine("    The type of filter to use");
-		await Logger.InfoLine("    Valid values: Glob, Regex");
+		await Logger.InfoLine("    Valid values: Glob, Regex, StartsWith");
 		await Logger.InfoLine("    Required: false");
 		await Logger.InfoLine("    Default: Glob");
 		await Logger.InfoLine("    Example: -ft Regex");
