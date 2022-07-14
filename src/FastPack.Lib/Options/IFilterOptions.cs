@@ -7,7 +7,7 @@ namespace FastPack.Lib.Options
 	{
 		public List<string> IncludeFilters { get; }
 		public List<string> ExcludeFilters { get; }
-		public TextMatchProviderType FilterType { get; }
+		public TextMatchProviderType FilterType { get; set; }
 		public bool FilterCaseInsensitive { get; set; }
 	}
 }
