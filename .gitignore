@@ -265,3 +265,5 @@ paket-files/
 
 # benchmarking artifacts
 /BenchmarkDotNet.Artifacts/results
+
+build-output
