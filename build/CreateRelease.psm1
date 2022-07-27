@@ -134,7 +134,8 @@ function Publish-Executables {
   )
 
   Write-Host "> Publishing executables for all runtimes ..."
-  $ExecutablesOutputPath = Join-Path $ReleaseRootDirectoryPath "Executables"
+  $BuildOutputPath = Join-Path $PSScriptRoot "../build-output"
+  $ExecutablesOutputPath = Join-Path $BuildOutputPath "Executables"
   Remove-Item -Path $ExecutablesOutputPath -Force -Recurse -ErrorAction SilentlyContinue
   New-Item -Path $ExecutablesOutputPath -ItemType Directory -Force | Out-Null
 
@@ -156,6 +157,14 @@ function Publish-Executables {
       Invoke-AuthenticodeSigning -Path (Join-Path $ExecutableOutputPath "RuntimeIncluded/FastPack.exe")
       Invoke-AuthenticodeSigning -Path (Join-Path $ExecutableOutputPath "RuntimeExcluded/FastPack.exe")
     }
+
+    Compress-Archive -Path (Join-Path $ExecutableOutputPath "RuntimeIncluded/*") -DestinationPath (Join-Path $ReleaseRootDirectoryPath "FastPack-$runtime-RuntimeIncluded.zip") -CompressionLevel Optimal -Force
+    Compress-Archive -Path (Join-Path $ExecutableOutputPath "RuntimeExcluded/*") -DestinationPath (Join-Path $ReleaseRootDirectoryPath "FastPack-$runtime-RuntimeExcluded.zip") -CompressionLevel Optimal -Force
+
+	if ($runtime.StartsWith("linux") -or $runtime.StartsWith("osx")) {
+		tar -czvf (Join-Path $ReleaseRootDirectoryPath "FastPack-$runtime-RuntimeIncluded.tar.gz") -C (Join-Path $ExecutableOutputPath "RuntimeIncluded" -Resolve) .
+		tar -czvf (Join-Path $ReleaseRootDirectoryPath "FastPack-$runtime-RuntimeExcluded.tar.gz") -C (Join-Path $ExecutableOutputPath "RuntimeExcluded" -Resolve) .
+	}
   }
 
   Write-Host "> Finished publishing executables for all runtimes"
