@@ -63,6 +63,11 @@ For all platforms there are 2 versions:
 * **RuntimeIncluded**: This version of the executable is larger than the other one, because the runtime (.NET) is included in the executable
 * **RuntimeExcluded**: This version of the executable is smaller than the other one, because the runtime (.NET) is <ins>not</ins> included in the executable. To run this executable you have to install the correct runtime first.
 
+## Antivirus software
+
+Be sure to add an exclusion for FastPack to your antivirus software.
+Otherwise the antivirus software will heavily reduce the speed of FastPack.
+
 # Usage
 
 For help just call FastPack without any parameters:
