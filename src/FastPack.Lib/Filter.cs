@@ -22,10 +22,10 @@ internal class Filter : IFilter
 		if (!options.IncludeFilters.Any() && !options.ExcludeFilters.Any())
 			return elements.ToList();
 
-		List<string> includeFilters = options.IncludeFilters.ConvertAll(pi => pi.Replace('/', pathSeparator).Replace('\\', pathSeparator).TrimEnd(pathSeparator));
-		List<string> excludeFilters = options.ExcludeFilters.ConvertAll(pe => pe.Replace('/', pathSeparator).Replace('\\', pathSeparator).TrimEnd(pathSeparator));
 		ITextMatchProvider textMatchProvider = TextMatchProviderFactory.GetProvider(options.FilterType);
-
+		List<string> includeFilters = textMatchProvider.NormalizePathFilters(options.IncludeFilters, pathSeparator).ToList();
+		List<string> excludeFilters = textMatchProvider.NormalizePathFilters(options.ExcludeFilters, pathSeparator).ToList();
+		
 		List<ElementState<T>> includedElementsSortedByRelativePath = ProcessIncludes(elements, options, pathSeparator, getRelativePathFunc, isDirectoryFunc, includeFilters, textMatchProvider);
 		ProcessExcludes(options, pathSeparator, getRelativePathFunc, isDirectoryFunc, excludeFilters, includedElementsSortedByRelativePath, textMatchProvider);
 		RemoveOrphanedDirectories(pathSeparator, getRelativePathFunc, includedElementsSortedByRelativePath);
