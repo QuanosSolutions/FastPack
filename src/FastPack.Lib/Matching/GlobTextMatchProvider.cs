@@ -1,4 +1,5 @@
-﻿using DotNet.Globbing;
+﻿using System.Collections.Generic;
+using DotNet.Globbing;
 
 namespace FastPack.Lib.Matching;
 
@@ -20,5 +21,11 @@ class GlobTextMatchProvider : ITextMatchProvider
 		{
 			return false;
 		}
+	}
+
+	public IEnumerable<string> NormalizePathFilters(IEnumerable<string> paths, char desiredPathSeparator)
+	{
+		// we dont have to do anything here. The glob implementation is smart enough to support slashes and backslashes
+		return paths;
 	}
 }
