@@ -49,6 +49,14 @@ internal class ArchiveUnpackerV1 : Unpacker
 		Manifest manifest = await GetManifestFromFile(inputFile);
 		await Logger.FinishTextProgress($"Got manifest in {currentStopwatch.Elapsed}.");
 
+		if (!Directory.Exists(options.OutputDirectoryPath))
+			Directory.CreateDirectory(options.OutputDirectoryPath);
+
+		currentStopwatch.Restart();
+		await Logger.StartTextProgress("Filtering files and directories to extract...");
+		FilterEntries(manifest.Entries, options);
+		await Logger.FinishTextProgress($"Filtered files and directories to extract in {currentStopwatch.Elapsed}.");
+
 		if (!options.IgnoreDiskSpaceCheck)
 		{
 			long? availableDiskSpace = await DiskSpaceInfo.GetAvailableSpaceForPathInBytes(options.OutputDirectoryPath, Logger);
@@ -63,14 +71,6 @@ internal class ArchiveUnpackerV1 : Unpacker
 				}
 			}
 		}
-
-		if (!Directory.Exists(options.OutputDirectoryPath))
-			Directory.CreateDirectory(options.OutputDirectoryPath);
-
-		currentStopwatch.Restart();
-		await Logger.StartTextProgress("Filtering files and directories to extract...");
-		FilterEntries(manifest.Entries, options);
-		await Logger.FinishTextProgress($"Filtered files and directories to extract in {currentStopwatch.Elapsed}.");
 
 		if (options.DryRun)
 		{
