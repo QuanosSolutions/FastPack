@@ -49,9 +49,8 @@ class Program
 				await optionsParser.PrintHelp();
 				return 0;
 			}
-
-			await action.Run();
-			return 0;
+			
+			return await action.Run();
 		}
 		catch (InvalidOptionException invalidOptionException)
 		{

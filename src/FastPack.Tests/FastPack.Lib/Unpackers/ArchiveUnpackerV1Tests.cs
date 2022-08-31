@@ -99,7 +99,8 @@ internal class ArchiveUnpackerV1Tests
 		new FileInfo(Path.Combine(outputDirectory, "subDir", "biggerFile.txt")).Length.Should().Be(1520);
 		loggerMock.Verify(x => x.InfoLine(It.IsAny<string>()));
 		loggerMock.Verify(x => x.StartTextProgress(It.IsAny<string>()));
-		loggerMock.Verify(x => x.ReportTextProgress(It.IsAny<double>(), It.IsAny<string>()));
+		if (Environment.UserInteractive && !Console.IsOutputRedirected)
+			loggerMock.Verify(x => x.ReportTextProgress(It.IsAny<double>(), It.IsAny<string>()));
 		loggerMock.Verify(x => x.FinishTextProgress(It.IsAny<string>()));
 		loggerMock.VerifyNoOtherCalls();
 	}
