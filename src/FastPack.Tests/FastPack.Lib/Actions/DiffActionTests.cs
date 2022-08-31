@@ -198,7 +198,8 @@ internal class DiffActionTests
 		File.Exists(Path.Combine(diffOptions.ExtractionDirectoryPath, "Changed", "2", "test.txt")).Should().Be(true);
 		loggerMock.Verify(x => x.InfoLine(It.IsAny<string>()));
 		loggerMock.Verify(x => x.StartTextProgress(It.IsAny<string>()));
-		loggerMock.Verify(x => x.ReportTextProgress(It.IsAny<double>(), It.IsAny<string>()));
+		if (Environment.UserInteractive && !Console.IsOutputRedirected)
+			loggerMock.Verify(x => x.ReportTextProgress(It.IsAny<double>(), It.IsAny<string>()));
 		loggerMock.Verify(x => x.FinishTextProgress(It.IsAny<string>()));
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			processAbstractionMock.Verify(x => x.Start("explorer.exe", It.IsAny<string>()), Times.Exactly(1));

@@ -39,6 +39,8 @@ namespace FastPack.Lib.Logging
 
 		public int GetWindowWidth()
 		{
+			if (!Environment.UserInteractive || Console.IsOutputRedirected)
+				return 0;
 			return Console.WindowWidth;
 		}
 
