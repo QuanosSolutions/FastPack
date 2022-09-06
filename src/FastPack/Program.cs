@@ -47,9 +47,9 @@ class Program
 			if (fastPackActionOptions.HelpRequested || action == null)
 			{
 				await optionsParser.PrintHelp();
-				return 0;
+				return action == null ? ErrorConstants.MissingAction : 0;
 			}
-			
+
 			return await action.Run();
 		}
 		catch (InvalidOptionException invalidOptionException)

@@ -3,6 +3,8 @@
 public class ErrorConstants
 {
 	public const int UnspecificError = -1;
+	public const int MissingAction = -2;
+
 	// Diff-Constants 100-199
 	public const int Diff_FirstFilePath_Missing = -100;
 	public const int Diff_SecondFilePath_Missing = -101;
