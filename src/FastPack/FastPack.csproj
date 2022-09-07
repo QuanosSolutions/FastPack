@@ -7,9 +7,9 @@
     <Product>FastPack</Product>
     <Copyright>Copyright © Quanos Solutions GmbH</Copyright>
 	<PublishSingleFile Condition="'$(Configuration)' != 'Debug'">true</PublishSingleFile>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
     <Description>FastPack is a lightning fast deduplication (de)compressor that is particularly useful for compressing and decompressing build artifacts containing a small to high degree of duplicate files.</Description>
     <DebugType>embedded</DebugType>
     <SignAssembly>True</SignAssembly>
