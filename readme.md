@@ -7,6 +7,9 @@
   <a href="https://github.com/quanossolutions/FastPack/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license" />
   </a>
+  <a href="https://github.com/QuanosSolutions/FastPack/actions/workflows/ci.yml">
+    <img src="https://github.com/QuanosSolutions/FastPack/actions/workflows/ci.yml/badge.svg?branch=main" alt="FastPack CI" />
+  </a>
 </div>
 
 # General
