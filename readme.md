@@ -27,15 +27,23 @@ By default FastPack uses **Deflate** for compression with a compression level of
 * **Speed**: FastPack uses all your cores for packing and unpacking
 * **Filtering**: FastPack allows include/exclude filters during pack and unpack
 * **Comparison**: FastPack allows comparison of 2 archives without the need to unpack the content
-* **Cross-Platform**: Run on Windows, Linux and OSX
+* **Cross-Platform**: Runs on Windows, Linux and OSX
 
 # Sponsors
 
 ## Quanos Solutions GmbH
 
-Quanos gave us the time to create/maintain/publish this great tool.
+[Quanos](http://quanos.com) gave us the time to create/maintain/publish this great tool.
 
 [![Quanos Solutions GmbH](docs/images/sponsors/quanos.gif)](http://quanos.com)
+
+[Quanos](http://quanos.com) - that is the association of software experts who develop unique software products and solutions for after-sales, service and technical documentation. More than 1000 customers worldwide trust in the innovative, successful and sustainable technology of Quanos.
+
+Our 270 employees have more than 20 years of market experience and contribute to the uniqueness of Quanos: We work closely together, complement each other and benefit from each other's know-how.
+
+True to our motto: **"Passion for smart information"**, we live our mission every day: we empower human to machine communication.
+
+Follow your passion for CODE at Quanos and join our great team. Check out our current vacancies [here](https://karriere.quanos.com/de?id=2f581a).
 
 # Installation (.NET Global Tool)
 
