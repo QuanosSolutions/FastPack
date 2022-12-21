@@ -57,7 +57,7 @@ public class PackOptionsParser : IOptionsParser
 		await Logger.InfoLine("    Valid values: depends on the filter type parameter (-ft)");
 		await Logger.InfoLine("    Required: false");
 		await Logger.InfoLine("    Occurrence: multiple");
-		await Logger.InfoLine("    Example: -if dll -if dll\\**\\*");
+		await Logger.InfoLine("    Example: -ef dll -ef dll\\**\\*");
 		await Logger.InfoLine();
 		await Logger.InfoLine("  -fci|--filter-case-insensitive");
 		await Logger.InfoLine("    Make the filter case insensitive (default is: case sensitive)");
