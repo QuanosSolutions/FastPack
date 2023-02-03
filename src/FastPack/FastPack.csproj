@@ -6,10 +6,10 @@
     <Authors>Quanos Solutions GmbH</Authors>
     <Product>FastPack</Product>
     <Copyright>Copyright © Quanos Solutions GmbH</Copyright>
-	<PublishSingleFile Condition="'$(Configuration)' != 'Debug'">true</PublishSingleFile>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <Version>2.0.0</Version>
+    <PublishSingleFile Condition="'$(Configuration)' != 'Debug'">true</PublishSingleFile>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
+    <Version>2.1.0</Version>
     <Description>FastPack is a lightning fast deduplication (de)compressor that is particularly useful for compressing and decompressing build artifacts containing a small to high degree of duplicate files.</Description>
     <DebugType>embedded</DebugType>
     <SignAssembly>True</SignAssembly>
@@ -17,6 +17,12 @@
     <AssemblyOriginatorKeyFile>../FastPack.snk</AssemblyOriginatorKeyFile>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!--
+            Roll-forward to the next available higher major version, and lowest minor version,
+            if requested major version is missing. If the requested major version is present,
+            then the Minor policy is used. See: https://learn.microsoft.com/en-us/dotnet/core/versions/selection
+    -->
+    <RollForward>Major</RollForward>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'GlobalTool'">
     <PublishSingleFile>false</PublishSingleFile>
