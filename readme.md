@@ -378,7 +378,7 @@ CMD> FastPack -a diff -1 C:\FirstFile.fup -2 C:\FirstFile.fup -x C:\DifferencesF
 ### Do a comparison including sizes, dates and permission with a pretty json output and extract the differences
 
 ```
-CMD> FastPack -a diff -1 C:\FirstFile.fup -2 C:\FirstFile.fup -x C:\DifferencesFolder --format json --pretty -s Size -s Data -s Permission
+CMD> FastPack -a diff -1 C:\FirstFile.fup -2 C:\FirstFile.fup -x C:\DifferencesFolder --format json --pretty -s Size -s Date -s Permission
 ```
 
 ## Action: info
