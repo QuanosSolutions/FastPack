@@ -12,6 +12,7 @@ using FastPack.TestFramework.Common;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace FastPack.Tests.FastPack.Lib.Actions
 {
@@ -130,7 +131,7 @@ namespace FastPack.Tests.FastPack.Lib.Actions
 
 			int runResult = await infoAction.Run();
 
-			Assert.AreEqual(0, runResult);
+			ClassicAssert.AreEqual(0, runResult);
 
 			// verify method calls
 			unpackerMock.Verify(u => u.GetManifestFromStream(It.IsAny<Stream>()), Times.Once);

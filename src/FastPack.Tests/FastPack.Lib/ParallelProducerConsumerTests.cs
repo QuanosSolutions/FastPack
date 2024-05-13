@@ -7,6 +7,7 @@ using FastPack.Lib;
 using FastPack.Lib.TypeExtensions;
 using FastPack.TestFramework.Common;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace FastPack.Tests.FastPack.Lib;
 
@@ -35,7 +36,7 @@ public class ParallelProducerConsumerTests
 			},
 			Environment.ProcessorCount,
 			1);
-		Assert.AreEqual(expected, sum);
+		ClassicAssert.AreEqual(expected, sum);
 	}
 
 	[Test]
@@ -72,7 +73,7 @@ public class ParallelProducerConsumerTests
 			{
 				Interlocked.Decrement(ref currentCountInQueue);
 				//Console.WriteLine($"Size: {currentSize}, Count: {currentCountInQueue}");
-				Assert.GreaterOrEqual(limit, currentSize);
+				ClassicAssert.GreaterOrEqual(limit, currentSize);
 				await Task.Delay(i.Size * 10);
 				sum += i.Value;
 				Interlocked.Add(ref currentSize, -1 * i.Size);
@@ -80,7 +81,7 @@ public class ParallelProducerConsumerTests
 			},
 			Environment.ProcessorCount,
 			1);
-		Assert.AreEqual(expected, sum);
-		Assert.AreEqual(0, currentSize);
+		ClassicAssert.AreEqual(expected, sum);
+		ClassicAssert.AreEqual(0, currentSize);
 	}
 }

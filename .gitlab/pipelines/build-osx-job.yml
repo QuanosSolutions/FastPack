@@ -1,16 +1,19 @@
 build-osx:
   stage: build
-  image: mcr.microsoft.com/dotnet/sdk:6.0.102-focal # https://hub.docker.com/_/microsoft-dotnet-sdk
+  image: mcr.microsoft.com/dotnet/sdk:8.0.203-jammy # https://hub.docker.com/_/microsoft-dotnet-sdk
   tags:
-    - Kubernetes-PWSH
+  - Kubernetes-PWSH
   dependencies: []
   needs: []
   artifacts:
     when: always
     paths:
-      - '_Artifacts/**/*'
+    - '_Artifacts/**/*'
   script:
   - |
+    # Activate backward compatibility.
+    $PSNativeCommandArgumentPassing = 'Legacy'
+
     Write-Host "> Running build"
     $solutionPath = Join-Path $SourceDirPath 'FastPack/FastPack.csproj'
     $dotnetArgs = @(

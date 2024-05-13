@@ -7,20 +7,20 @@ jobs:
         os: [win-x64, linux-x64, osx-x64]
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '6.0.x'
-      - name: Build ${{ matrix.os }}
-        working-directory: ./src
-        run: dotnet publish -r ${{ matrix.os }} -c Release -o ../output/${{ matrix.os }} --verbosity q --self-contained True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -p:EnableCompressionInSingleFile=True ./FastPack/FastPack.csproj
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: FastPack executable
-          path: |
-            output/**/*
+    - uses: actions/checkout@v3
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    - name: Build ${{ matrix.os }}
+      working-directory: ./src
+      run: dotnet publish -r ${{ matrix.os }} -c Release -o ../output/${{ matrix.os }} --verbosity q --self-contained True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -p:EnableCompressionInSingleFile=True ./FastPack/FastPack.csproj
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: FastPack executable
+        path: |
+          output/**/*
 
   test:
     strategy:
@@ -28,14 +28,14 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '6.0.x'
-      - name: Install dependencies
-        working-directory: ./src
-        run: dotnet restore
-      - name: Test
-        working-directory: ./src
-        run: dotnet test --no-restore --verbosity normal
+    - uses: actions/checkout@v3
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    - name: Install dependencies
+      working-directory: ./src
+      run: dotnet restore
+    - name: Test
+      working-directory: ./src
+      run: dotnet test --no-restore --verbosity normal

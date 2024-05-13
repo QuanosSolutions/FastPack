@@ -1,18 +1,21 @@
 test-win:
   stage: test
   tags:
-    - NET6
-    - Windows
+  - NET6
+  - Windows
   dependencies: []
   needs: []
   artifacts:
     when: always
     paths:
-      - '_Artifacts/**/*'
+    - '_Artifacts/**/*'
     reports:
       junit: '_Artifacts/TestResults/*.junit.xml'
   script:
   - |
+    # Activate backward compatibility.
+    $PSNativeCommandArgumentPassing = 'Legacy'
+
     Write-Host "> Running tests"
     $projectPath = Join-Path $SourceDirPath 'FastPack.Tests/FastPack.Tests.csproj'
     $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults/tests.junit.xml'

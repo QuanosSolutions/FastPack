@@ -7,6 +7,7 @@ using FastPack.Options.Parsers;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace FastPack.Tests.FastPack.Options.Parsers
 {
@@ -19,7 +20,7 @@ namespace FastPack.Tests.FastPack.Options.Parsers
 			ArgumentsParser argumentsParser = CreateParser(new string[] { }, false);
 			bool result = await argumentsParser.Parse(new Dictionary<string, Func<string, Task<bool>>>());
 
-			Assert.IsTrue(result);
+			Assert.That(result);
 		}
 
 		[Test]
@@ -28,7 +29,7 @@ namespace FastPack.Tests.FastPack.Options.Parsers
 			ArgumentsParser argumentsParser = CreateParser(new string[] { "KEY_WITH_NO_MAPPING" }, false);
 			bool result = await argumentsParser.Parse(new Dictionary<string, Func<string, Task<bool>>>());
 
-			Assert.IsTrue(result);
+			Assert.That(result);
 		}
 
 		[Test]
@@ -38,7 +39,7 @@ namespace FastPack.Tests.FastPack.Options.Parsers
 			ArgumentsParser argumentsParser = CreateParser(new[] { "KEY_WITH_NO_MAPPING" }, true, loggerMock.Object);
 
 			bool result = await argumentsParser.Parse(new Dictionary<string, Func<string, Task<bool>>>());
-			Assert.IsFalse(result);
+			ClassicAssert.IsFalse(result);
 
 			loggerMock.Verify(l => l.ErrorLine("Unknown parameter: KEY_WITH_NO_MAPPING"));
 		}
@@ -57,7 +58,7 @@ namespace FastPack.Tests.FastPack.Options.Parsers
 
 			bool result = await argumentsParser.Parse(parameterProcessingMap);
 
-			Assert.IsTrue(result);
+			Assert.That(result);
 			args.Should().BeEmpty("all parameters should be removed");
 		}
 

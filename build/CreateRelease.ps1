@@ -32,6 +32,9 @@ param (
     $AuthenticodeSign = $false
 )
 
+# Activate backward compatibility.
+$PSNativeCommandArgumentPassing = 'Legacy'
+
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $stopWatch = [System.Diagnostics.Stopwatch]::StartNew()

@@ -7,6 +7,7 @@ using FastPack.Lib;
 using FastPack.Lib.TypeExtensions;
 using FastPack.TestFramework.Common;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace FastPack.Tests.FastPack.Lib;
 
@@ -47,8 +48,8 @@ public class LimitParallelProducerConsumerTests
 			produced => produced.Value,
 			Environment.ProcessorCount,
 			1);
-		Assert.AreEqual(expected, sum);
-		Assert.AreEqual(0, currentSize);
+		ClassicAssert.AreEqual(expected, sum);
+		ClassicAssert.AreEqual(0, currentSize);
 	}
 
 	[Test]
@@ -85,7 +86,7 @@ public class LimitParallelProducerConsumerTests
 			produced => produced.Value,
 			1,
 			Environment.ProcessorCount);
-		Assert.AreEqual(expected, sum);
-		Assert.AreEqual(0, currentSize);
+		ClassicAssert.AreEqual(expected, sum);
+		ClassicAssert.AreEqual(0, currentSize);
 	}
 }
