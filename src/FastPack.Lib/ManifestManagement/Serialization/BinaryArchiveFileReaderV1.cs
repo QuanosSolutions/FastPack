@@ -26,52 +26,50 @@ public class BinaryArchiveFileReaderV1 : IArchiveFileReader
 			inputStream.Seek(manifestPosition, SeekOrigin.Begin);
 		}
 
-		await using (DeflateStream deflateStream = new(inputStream, CompressionMode.Decompress, true))
+		await using DeflateStream manifestDeflateStream = new(inputStream, CompressionMode.Decompress, true);
+		await using BufferedStream bufferedManifestStream = new (manifestDeflateStream, ushort.MaxValue);
+		using BinaryReader manifestReader = new(bufferedManifestStream, Encoding.UTF8, true);
+		
+		manifest.HashAlgorithm = (HashAlgorithm)manifestReader.ReadUInt16();
+		IHashProvider hashProvider = HashProviderFactory.GetHashProvider(manifest.HashAlgorithm);
+		int hashSizeInBytes = hashProvider.GetHashSizeInBytes();
+
+		manifest.CompressionAlgorithm = (CompressionAlgorithm)manifestReader.ReadUInt16();
+		manifest.CompressionLevel = manifestReader.ReadUInt16();
+		manifest.CreationDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
+		manifest.MetaDataOptions = (MetaDataOptions)manifestReader.ReadByte();
+		manifest.Comment = manifestReader.ReadUtf8String();
+		int entryCount = manifestReader.ReadInt32();
+
+		for (int i = 0; i < entryCount; i++)
 		{
-			using (BinaryReader reader = new(deflateStream, Encoding.UTF8, true))
+			ManifestEntry entry = new();
+			manifest.Entries.Add(entry);
+			entry.Type = (EntryType)manifestReader.ReadByte();
+			if (entry.Type == EntryType.File)
 			{
-				manifest.HashAlgorithm = (HashAlgorithm) reader.ReadUInt16();
-				IHashProvider hashProvider = HashProviderFactory.GetHashProvider(manifest.HashAlgorithm);
-				int hashSizeInBytes = hashProvider.GetHashSizeInBytes();
+				entry.DataIndex = manifestReader.ReadInt64();
+				entry.DataSize = manifestReader.ReadInt64();
+				entry.OriginalSize = manifestReader.ReadInt64();
 
-				manifest.CompressionAlgorithm = (CompressionAlgorithm) reader.ReadUInt16();
-				manifest.CompressionLevel = reader.ReadUInt16();
-				manifest.CreationDateUtc = new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
-				manifest.MetaDataOptions = (MetaDataOptions)reader.ReadByte();
-				manifest.Comment = reader.ReadUtf8String();
-				int entryCount = reader.ReadInt32();
+				entry.Hash = hashProvider.HashBytesToString(manifestReader.ReadBytes(hashSizeInBytes));
+				//entry.Hash = reader.ReadUtf8String();
+			}
 
-				for (int i = 0; i < entryCount; i++)
+			int fileSystemEntryCount = manifestReader.ReadInt32();
+			for (int j = 0; j < fileSystemEntryCount; j++)
+			{
+				ManifestFileSystemEntry fileSystemEntry = new();
+				entry.FileSystemEntries.Add(fileSystemEntry);
+				fileSystemEntry.RelativePath = manifestReader.ReadUtf8String();
+				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemDates))
 				{
-					ManifestEntry entry = new();
-					manifest.Entries.Add(entry);
-					entry.Type = (EntryType) reader.ReadByte();
-					if (entry.Type == EntryType.File)
-					{
-						entry.DataIndex = reader.ReadInt64();
-						entry.DataSize = reader.ReadInt64();
-						entry.OriginalSize = reader.ReadInt64();
-
-						entry.Hash = hashProvider.HashBytesToString(reader.ReadBytes(hashSizeInBytes));
-						//entry.Hash = reader.ReadUtf8String();
-					}
-
-					int fileSystemEntryCount = reader.ReadInt32();
-					for (int j = 0; j < fileSystemEntryCount; j++)
-					{
-						ManifestFileSystemEntry fileSystemEntry = new();
-						entry.FileSystemEntries.Add(fileSystemEntry);
-						fileSystemEntry.RelativePath = reader.ReadUtf8String();
-						if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemDates))
-						{
-							fileSystemEntry.CreationDateUtc = new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
-							fileSystemEntry.LastAccessDateUtc = new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
-							fileSystemEntry.LastWriteDateUtc = new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
-						}
-						if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions))
-							fileSystemEntry.FilePermissions = reader.ReadUInt32();
-					}
+					fileSystemEntry.CreationDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
+					fileSystemEntry.LastAccessDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
+					fileSystemEntry.LastWriteDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
 				}
+				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions))
+					fileSystemEntry.FilePermissions = manifestReader.ReadUInt32();
 			}
 		}
 		return manifest;
