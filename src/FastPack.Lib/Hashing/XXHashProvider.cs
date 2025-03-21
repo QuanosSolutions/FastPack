@@ -8,9 +8,11 @@ namespace FastPack.Lib.Hashing;
 // ReSharper disable once InconsistentNaming
 public class XXHashProvider : IHashProvider
 {
+	// Reduces hashing time by ~40% on NTFS NVME disk compared to default of 8KiB
+	private const int HashBufferSize = 512 * 1024;
 	public async Task<string> CalculateHash(Stream stream)
 	{
-		return (await xxHash64.ComputeHashAsync(stream)).ToString();
+		return (await xxHash64.ComputeHashAsync(stream, HashBufferSize)).ToString();
 	}
 
 	public string HashBytesToString(ReadOnlySpan<byte> bytes)
