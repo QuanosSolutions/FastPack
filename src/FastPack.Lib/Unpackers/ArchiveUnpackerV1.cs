@@ -156,81 +156,99 @@ internal class ArchiveUnpackerV1 : Unpacker
 	private async Task UnpackFiles(UnpackOptions options, IEnumerable<ManifestEntry> manifestEntries, Manifest manifest, string inputFile)
 	{
 		IFileCompressor fileCompressor = FileCompressorFactory.GetCompressor(manifest.CompressionAlgorithm);
-
-		// we order descending here, because a large file at first will fully occupy the consumer (sequential file write)
-		List<ManifestEntry> allFileEntries = manifestEntries.Where(x => x.Type == EntryType.File).OrderByDescending(x => x.OriginalSize).ToList();
-
-		// Math.Min(options.MaxMemory ?? 0, int.MaxValue) is used to force all files larger than 2 GB to be processed sequentially - Otherwise the MemoryStream would crash
-		List<ManifestEntry> parallelFileEntries = allFileEntries.Where(e => e.OriginalSize <= Math.Min(options.MaxMemory ?? 0, int.MaxValue)).ToList();
-		List<ManifestEntry> sequentialFileEntries = allFileEntries.Where(e => e.OriginalSize > Math.Min(options.MaxMemory ?? 0, int.MaxValue)).ToList();
-
+		
+		List<ManifestEntry> allFileEntries = manifestEntries.Where(x => x.Type == EntryType.File).ToList();
+		
 		int filesProcessed = 0;
-		IProgress<int> unpackProgress = new Progress<int>(current => ShowProgress(current, allFileEntries.Sum(e => e.FileSystemEntries.Count), "Unpack progress: ").Wait());
-		// process parallel entries
-		await LimitParallelProducerConsumer.ProcessData(parallelFileEntries,
-			async manifestEntry => {
-				SharedUnpackWorkItemState sharedUnpackWorkItemState = new() {
-					WorkItemReferences = manifestEntry.FileSystemEntries.Count
-				};
-				IEnumerable<UnpackWorkItem> unpackWorkItems = manifestEntry.FileSystemEntries.ConvertAll(x => new UnpackWorkItem
-				{
-					ManifestFileSystemEntry = x,
-					SharedState = sharedUnpackWorkItemState
-				});
-				await ReadFromDataStream(inputFile, manifestEntry, async decompressionStream => sharedUnpackWorkItemState.UnpackedData = await fileCompressor.DecompressFile(decompressionStream));
-				return unpackWorkItems;
-			},
-			async unpackWorkItem => {
-				string targetFile = Path.Combine(options.OutputDirectoryPath, unpackWorkItem.ManifestFileSystemEntry.RelativePath);
-				await using (FileStream fileStream = new(targetFile, FileMode.Create, FileAccess.Write, FileShare.None, Constants.BufferSize, Constants.OpenFileStreamsAsync))
-					fileStream.Write(unpackWorkItem.SharedState.UnpackedData, 0, unpackWorkItem.SharedState.UnpackedData.Length);
-					
-				SetMetadata(manifest, targetFile, unpackWorkItem.ManifestFileSystemEntry, options);
+		IProgress<int> unpackProgress = new Progress<int>(current => ShowProgress(current, allFileEntries.Count, "Unpack progress: ").Wait());
 
-				lock (unpackWorkItem.SharedState)
-				{
-					unpackWorkItem.SharedState.WorkItemReferences -= 1;
-				}
+		await Parallel.ForEachAsync(allFileEntries, new ParallelOptions {
+				MaxDegreeOfParallelism = options.MaxDegreeOfParallelism.Value
+		}, async (fileEntry, _) => {
+			if (options.OptimizeForCopyOnWriteFilesystem)
+				await DecompressManifestEntryCow(options, fileEntry, manifest, inputFile, fileCompressor);
+			else
+				await DecompressManifestEntry(options, fileEntry, manifest, inputFile, fileCompressor);
 
-				if (unpackWorkItem.SharedState.WorkItemReferences == 0)
-				{
-					// free memory
-					unpackWorkItem.SharedState.UnpackedData = null;
-				}
+			if (!options.ShowProgress)
+				return;
 
-				if (!options.ShowProgress)
-					return;
+			Interlocked.Increment(ref filesProcessed);
+			unpackProgress.Report(filesProcessed);
+		});
+	}
 
-				Interlocked.Increment(ref filesProcessed);
-				unpackProgress.Report(filesProcessed);
-			},
-			(items, current) => {
-				long currentSize = items.DistinctBy(x => x.Hash).Sum(x => x.OriginalSize);
-				return currentSize + current.OriginalSize <= options.MaxMemory;
-			},
-			source => source.FileSystemEntries.Select(x => x.RelativePath),
-			produced => produced.ManifestFileSystemEntry.RelativePath,
-			options.MaxDegreeOfParallelism!.Value,
-			options.MaxDegreeOfParallelism!.Value);
-
-		// process sequential entries
-		foreach (ManifestEntry manifestEntry in sequentialFileEntries)
+	private static async Task<FileStream[]> OpenFileStreams(IEnumerable<ManifestFileSystemEntry> entries, UnpackOptions options)
+	{
+		// Open FileStreams for every file. If opening of one file fails we need to dispose the files that were 
+		// already opened successfully.
+		List<FileStream> openedStreams = new();
+		try
 		{
-			foreach (ManifestFileSystemEntry manifestFileSystemEntry in manifestEntry.FileSystemEntries)
+			foreach (var entry in entries)
 			{
-				string targetFile = Path.Combine(options.OutputDirectoryPath, manifestFileSystemEntry.RelativePath);
-				await using (FileStream fileStream = new(targetFile, FileMode.Create, FileAccess.Write, FileShare.None, Constants.BufferSize, Constants.OpenFileStreamsAsync))
-					await ReadFromDataStream(inputFile, manifestEntry, async decompressionStream => await fileCompressor.DecompressFile(decompressionStream, fileStream));
-
-				SetMetadata(manifest, targetFile, manifestFileSystemEntry, options);
-
-				if (!options.ShowProgress)
-					continue;
-
-				Interlocked.Increment(ref filesProcessed);
-				unpackProgress.Report(filesProcessed);
+				var path = Path.Combine(options.OutputDirectoryPath, entry.RelativePath);
+				openedStreams.Add(File.Open(path, FileMode.Create, FileAccess.Write));
 			}
 		}
+		catch
+		{
+			foreach (var openedStream in openedStreams)
+			{
+				await openedStream.DisposeAsync();
+			}
+			throw;
+		}
+		return openedStreams.ToArray();
+	}
+	
+	private async Task DecompressManifestEntry(UnpackOptions options, ManifestEntry manifestEntry, Manifest manifest,
+			string inputFile, IFileCompressor fileCompressor)
+	{
+		var fileStreams = await OpenFileStreams(manifestEntry.FileSystemEntries, options);
+		try
+		{
+			const int decompressionChunkSize = 2 * 1024 * 1024;
+			await ReadFromDataStream(inputFile, manifestEntry, async decompressionStream =>
+					await fileCompressor.DecompressFileChunked(decompressionStream, decompressionChunkSize,
+							async (memory) => {
+								foreach (var fileStream in fileStreams)
+								{
+									await fileStream.WriteAsync(memory);
+								}
+							}));
+
+			foreach (var entry in manifestEntry.FileSystemEntries)
+			{
+				string path = Path.Combine(options.OutputDirectoryPath, entry.RelativePath);
+				SetMetadata(manifest, path, entry, options);
+			}
+		}
+		finally
+		{
+			foreach (var fileStream in fileStreams)
+			{
+				await fileStream.DisposeAsync();
+			}
+		}
+	}
+
+	private async Task DecompressManifestEntryCow(UnpackOptions options, ManifestEntry manifestEntry, Manifest manifest,
+			string inputFile, IFileCompressor fileCompressor)
+	{
+		ManifestFileSystemEntry firstEntry = manifestEntry.FileSystemEntries.First();
+
+		string firstTargetFile = Path.Combine(options.OutputDirectoryPath, firstEntry.RelativePath);
+		await using (FileStream fileStream = new(firstTargetFile, FileMode.Create, FileAccess.Write, FileShare.None, Constants.BufferSize, Constants.OpenFileStreamsAsync))
+			await ReadFromDataStream(inputFile, manifestEntry, async decompressionStream => await fileCompressor.DecompressFile(decompressionStream, fileStream));
+
+		foreach (ManifestFileSystemEntry entry in manifestEntry.FileSystemEntries.Skip(1))
+		{
+			string nextTargetFile = Path.Combine(options.OutputDirectoryPath, entry.RelativePath);
+			File.Copy(firstTargetFile, nextTargetFile, true);
+			SetMetadata(manifest, nextTargetFile, entry, options);
+		}
+		SetMetadata(manifest, firstTargetFile, firstEntry, options);
 	}
 
 	private async Task ShowProgress(int current, int total, string prefixText)

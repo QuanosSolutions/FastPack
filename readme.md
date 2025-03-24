@@ -343,8 +343,16 @@ CMD> FastPack -a unpack -i C:\InputFile.fup -o C:\TargetFolder
 
 In this example the "**dll**" folder and everything below as well as the "**docs**" file or folder is excluded from unpack.
 
-```
 CMD> FastPack -a unpack -i C:\InputFile.fup -o C:\TargetFolder -ft glob -ef dll/** -ef docs
+### Optimize unpack for Filesystems with Copy-On-Write
+
+Some Filesystems like Microsoft DevDrive (ReFS) or Btrfs support Copy-On-Write functionality.
+This allows copying files without taking up additional disk space. 
+With `-cow` you can specify that FastPack should optimize its extraction for this scenario.
+In this case identical files only take up disk space once reducing the required disk space for the extracted archive.
+
+```
+CMD> FastPack -a unpack -i C:\InputFile.fup -o C:\TargetFolder -cow
 ```
 
 ### Do a dry-run of the unpack with simple text output

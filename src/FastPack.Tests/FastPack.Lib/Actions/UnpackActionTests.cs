@@ -217,26 +217,7 @@ namespace FastPack.Tests.FastPack.Lib.Actions
 				options.MaxDegreeOfParallelism.Should().Be(Environment.ProcessorCount);
 			}
 		}
-
-		[Test]
-		public async Task Ensure_MaxMemory_Is_Not_Changed_If_Not_Null()
-		{
-			// arrange
-			UnpackOptions options = new() {
-				MaxMemory = 1234,
-			};
-			UnpackAction action = new(Mock.Of<ILogger>(), options);
-
-			try
-			{
-				await action.Run();
-			}
-			catch
-			{
-				options.MaxMemory.Should().Be(1234);
-			}
-		}
-
+		
 		[Test]
 		public async Task Ensure_MaxMemory_Is_Set_To_NonNull_If_Null()
 		{
