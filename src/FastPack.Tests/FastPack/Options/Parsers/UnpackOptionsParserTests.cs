@@ -145,48 +145,6 @@ public class UnpackOptionsParserTests : OptionsParserTestBase<UnpackOptionsParse
 			StrictMode = strictMode
 		};
 
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "-mm", "1G" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024*1024*1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "-mm", "1gb" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024 * 1024 * 1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "--maxmemory", "1M" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024 * 1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "--maxmemory", "1mb" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024 * 1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "-mm", "1K" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "-mm", "1kb" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 1024 },
-			StrictMode = strictMode
-		};
-
-		yield return new OptionsParserTestCaseData<UnpackOptions> {
-			Args = new[] { "-mm", "500" },
-			ExpectedOptions = new UnpackOptions { MaxMemory = 500 },
-			StrictMode = strictMode
-		};
-
 		// can not test negative values for max memory here, because calculating the expected memory is not exact. The memory changes between the call and the calculation
 
 		yield return new OptionsParserTestCaseData<UnpackOptions> {

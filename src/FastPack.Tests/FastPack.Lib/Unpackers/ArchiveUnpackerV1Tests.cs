@@ -15,12 +15,25 @@ using FastPack.TestFramework.Common;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System.Collections;
 
 namespace FastPack.Tests.FastPack.Lib.Unpackers;
 
 [TestFixture]
 internal class ArchiveUnpackerV1Tests
 {
+	private class UnpackOptionsTestData
+	{
+		public static IEnumerable TestCases
+		{
+			get
+			{
+				yield return new TestCaseData(true);
+				yield return new TestCaseData(false);
+			}
+		}
+	}
+	
 	[Test]
 	public async Task Ensure_GetManifestFromStream_Works()
 	{
@@ -46,7 +59,8 @@ internal class ArchiveUnpackerV1Tests
 	}
 
 	[Test]
-	public async Task Ensure_Extract_TestCase1_Works()
+	[TestCaseSource(typeof(UnpackOptionsTestData), nameof(UnpackOptionsTestData.TestCases))]
+	public async Task Ensure_Extract_TestCase1_Works(bool optimizeForCopyOnWriteFilesystem)
 	{
 		// arrange
 		Mock<ILogger> loggerMock = new Mock<ILogger>();
@@ -60,7 +74,7 @@ internal class ArchiveUnpackerV1Tests
 		((ArchiveUnpackerV1)unpacker).FileCompressorFactory = fileCompressorFactoryMock.Object;
 
 		// act
-		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 4, MaxMemory = 1024 * 1024 * 1024, ShowProgress = false });
+		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 4, ShowProgress = false, OptimizeForCopyOnWriteFilesystem = optimizeForCopyOnWriteFilesystem});
 
 		// assert
 		extract.Should().Be(0);
@@ -75,7 +89,8 @@ internal class ArchiveUnpackerV1Tests
 	}
 
 	[Test]
-	public async Task Ensure_Extract_TestCase2_Works()
+	[TestCaseSource(typeof(UnpackOptionsTestData), nameof(UnpackOptionsTestData.TestCases))]
+	public async Task Ensure_Extract_TestCase2_Works(bool optimizeForCopyOnWriteFilesystem)
 	{
 		// arrange
 		Mock<ILogger> loggerMock = new Mock<ILogger>();
@@ -86,7 +101,7 @@ internal class ArchiveUnpackerV1Tests
 		IUnpacker unpacker = new ArchiveUnpackerV1(loggerMock.Object);
 
 		// act
-		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 4, MaxMemory = 100 });
+		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 4, OptimizeForCopyOnWriteFilesystem = optimizeForCopyOnWriteFilesystem});
 
 		// assert
 		extract.Should().Be(0);
@@ -106,7 +121,8 @@ internal class ArchiveUnpackerV1Tests
 	}
 
 	[Test]
-	public async Task Ensure_Extract_TestCase3_Works()
+	[TestCaseSource(typeof(UnpackOptionsTestData), nameof(UnpackOptionsTestData.TestCases))]
+	public async Task Ensure_Extract_TestCase3_Works(bool optimizeForCopyOnWriteFilesystem)
 	{
 		// arrange
 		Mock<ILogger> loggerMock = new Mock<ILogger>();
@@ -117,7 +133,7 @@ internal class ArchiveUnpackerV1Tests
 		IUnpacker unpacker = new ArchiveUnpackerV1(loggerMock.Object);
 
 		// act
-		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 1, MaxMemory = 1024*1024, ShowProgress = false });
+		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 1, ShowProgress = false, OptimizeForCopyOnWriteFilesystem = optimizeForCopyOnWriteFilesystem});
 
 		// assert
 		extract.Should().Be(0);
@@ -203,7 +219,7 @@ internal class ArchiveUnpackerV1Tests
 		((Unpacker)unpacker).Filter = filterMock.Object;
 
 		// act
-		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 1, MaxMemory = 1024 * 1024, ShowProgress = false, IncludeFilters = { "subDir" }, ExcludeFilters = { "**/biggestFile.txt" } });
+		int extract = await unpacker.Extract(filePath, new UnpackOptions { OutputDirectoryPath = outputDirectory, MaxDegreeOfParallelism = 1, ShowProgress = false, IncludeFilters = { "subDir" }, ExcludeFilters = { "**/biggestFile.txt" } });
 
 		// assert
 		extract.Should().Be(0);

@@ -24,15 +24,14 @@ public class UnpackAction : IAction
 
 	public async Task<int> Run()
 	{
-		await ValidateOptions();
+		ValidateOptions();
 
 		return await (await ArchiveUnpackerFactory.GetUnpacker(Options.InputFilePath, Logger)).Extract(Options.InputFilePath, Options);
 	}
 
-	private async Task ValidateOptions()
+	private void ValidateOptions()
 	{
 		Options.MaxDegreeOfParallelism ??= Environment.ProcessorCount;
-		Options.MaxMemory ??= (long)Math.Floor(await MemoryInfo.GetAvailableMemoryInBytes(Logger) * 0.8); // the default is 80% of the available memory
 
 		if (Options.OutputDirectoryPath == null)
 			throw new InvalidOptionException("Please provide the output directory path.", nameof(Options.OutputDirectoryPath), ErrorConstants.Unpack_OutputDirectoryPath_Missing);

@@ -76,12 +76,13 @@ public class UnpackOptionsParser : IOptionsParser
 		await Logger.InfoLine("    Valid values: Can be absolute numbers of cores or percentage values");
 		await Logger.InfoLine("    Example: -p -20%, -p 25%, -p -1, -p 8");
 		await Logger.InfoLine();
-		await Logger.InfoLine("  -mm|--maxmemory");
-		await Logger.InfoLine("    Maximum memory used for compression");
-		await Logger.InfoLine("    Default: Is set to half of available memory");
-		await Logger.InfoLine("    Valid values: Can be absolute numbers of bytes or percentage values of available memory");
+		await Logger.InfoLine("  -cow|--copy-on-write");
+		await Logger.InfoLine("    Optimize extraction for filesystems that support copy on write (e.g. ReFS/Microsoft DevDrive/Btrfs).");
+		await Logger.InfoLine("    Identical files will only take up disk space once but changes to one of them are still independent from copies.");
+		await Logger.InfoLine("    On Windows this requires Windows 11 24H2 or Windows Server 2025");
+		await Logger.InfoLine("    Default: Not active (Minimize IO for best performance on traditional file systems)");
 		await Logger.InfoLine("    Required: false");
-		await Logger.InfoLine("    Example: -20%, 25%, -1G, 8G, 200M, 100K, 100");
+		await Logger.InfoLine("    Example: -cow");
 		await Logger.InfoLine();
 		await Logger.InfoLine("  -dr|--dryrun [detailed]");
 		await Logger.InfoLine("    Only perform the action as dry run meaning no files will be written and only information about the actions will be returned.");
@@ -163,7 +164,7 @@ public class UnpackOptionsParser : IOptionsParser
 		parameterProcessingMap.AddMultiple(new[] { "-fci", "--filter-case-insensitive" }, _ => Task.FromResult(options.FilterCaseInsensitive = true));
 		parameterProcessingMap.AddMultiple(new[] { "-ft", "--filter-type" }, async _ => await argumentsParser.ProcessEnumParameterValue<TextMatchProviderType>(v => options.FilterType = v));
 		parameterProcessingMap.AddMultiple(new[] { "-p", "--parallelism" }, async _ => await argumentsParser.ProcessNumberOfProcessors(v => options.MaxDegreeOfParallelism = v));
-		parameterProcessingMap.AddMultiple(new[] { "-mm", "--maxmemory" }, async _ => await argumentsParser.ProcessMaxMemory(v => options.MaxMemory = v));
+		parameterProcessingMap.AddMultiple(new[] { "-mm", "--maxmemory" }, _ => Task.FromResult(true));
 		parameterProcessingMap.AddMultiple(new[] { "-dr", "--dryrun" }, async _ => {
 			options.DryRun = true;
 			return await argumentsParser.ProcessOptionalTextParameterValue(_ => options.DetailedDryRun = true, "detailed", true);
@@ -179,6 +180,7 @@ public class UnpackOptionsParser : IOptionsParser
 		parameterProcessingMap.AddMultiple(new[] { "-nd", "--no-dates" }, _ => { options.RestoreDates = false; return Task.FromResult(true); });
 		parameterProcessingMap.AddMultiple(new[] { "-nfp", "--no-permissions" }, _ => { options.RestorePermissions = false; return Task.FromResult(true); });
 		parameterProcessingMap.AddMultiple(new[] { "-isc", "--ignore-space-check" }, _ => Task.FromResult(options.IgnoreDiskSpaceCheck = true));
+		parameterProcessingMap.AddMultiple(new[] { "-cow", "--copy-on-write" }, _ => Task.FromResult(options.OptimizeForCopyOnWriteFilesystem = true));
 
 		return await argumentsParser.Parse(parameterProcessingMap) ? options : null;
 	}
