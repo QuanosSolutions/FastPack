@@ -1,5 +1,11 @@
 <Project>
 	<PropertyGroup>
+		<VersionMajor>2</VersionMajor>
+		<VersionMinor>1</VersionMinor>
+		<VersionPatch>0</VersionPatch>
+		<AssemblyVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).0</AssemblyVersion>
+		<FileVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).0</FileVersion>
+		<Version>$(VersionMajor).$(VersionMinor).$(VersionPatch)</Version>
 		<SourceLinkUrl>https://raw.githubusercontent.com/QuanosSolutions/FastPack/{commit}/*</SourceLinkUrl>
 		<SourceLinkRootDirectory>$(MSBuildThisFileDirectory)</SourceLinkRootDirectory>
 		<SourceLinkCommit Condition="'$(SourceLinkCommit)' == '' and '$(CI_COMMIT_SHA)' != ''">$(CI_COMMIT_SHA)</SourceLinkCommit>
