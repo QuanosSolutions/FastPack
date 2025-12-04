@@ -136,7 +136,7 @@ public class DiffAction : IAction
 					Hash = g.Hash,
 					Size = g.OriginalSize,
 					RelativePath = e.RelativePath,
-					Permissions = !e.FilePermissions.HasValue ? null : Convert.ToString(e.FilePermissions.Value, 8),
+					Permissions = !e.FilePermissions.HasValue ? null : Convert.ToString((uint)e.FilePermissions.Value, 8),
 					Created = e.CreationDateUtc,
 					LastAccess = e.LastAccessDateUtc,
 					LastWrite = e.LastWriteDateUtc

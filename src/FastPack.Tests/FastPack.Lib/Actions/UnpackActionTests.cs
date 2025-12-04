@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using AwesomeAssertions;
 using FastPack.Lib;
 using FastPack.Lib.Actions;
 using FastPack.Lib.Hashing;
@@ -10,7 +11,6 @@ using FastPack.Lib.Options;
 using FastPack.Lib.Unpackers;
 using FastPack.TestFramework;
 using FastPack.TestFramework.Common;
-using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -33,10 +33,10 @@ namespace FastPack.Tests.FastPack.Lib.Actions
 					await unpackAction.Run();
 
 					string extractedFilePath = Path.Combine(outputDirectory, "FluentAssertions.dll");
-					Assert.IsTrue(File.Exists(extractedFilePath));
+					File.Exists(extractedFilePath).Should().BeTrue();
 
 					string fileHash = await CryptoUtil.CalculateFileHash(new XXHashProvider(), extractedFilePath);
-					Assert.AreEqual(FluentAssertionsFileHash, fileHash);
+					fileHash.Should().Be(FluentAssertionsFileHash);
 				});
 			});
 		}
@@ -60,10 +60,10 @@ namespace FastPack.Tests.FastPack.Lib.Actions
 							await unpackAction2.Run();
 
 							string extractedFilePath = Path.Combine(targetDirectory, "FluentAssertions.dll");
-							Assert.IsTrue(File.Exists(extractedFilePath));
+							File.Exists(extractedFilePath).Should().BeTrue();
 
 							string fileHash = await CryptoUtil.CalculateFileHash(new XXHashProvider(), extractedFilePath);
-							Assert.AreEqual(FluentAssertionsFileHash, fileHash);
+							fileHash.Should().Be(FluentAssertionsFileHash);
 						});
 					});
 				});

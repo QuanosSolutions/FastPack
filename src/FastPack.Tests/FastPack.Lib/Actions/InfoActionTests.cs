@@ -9,7 +9,7 @@ using FastPack.Lib.ManifestReporting;
 using FastPack.Lib.Options;
 using FastPack.Lib.Unpackers;
 using FastPack.TestFramework.Common;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -130,7 +130,7 @@ namespace FastPack.Tests.FastPack.Lib.Actions
 
 			int runResult = await infoAction.Run();
 
-			Assert.AreEqual(0, runResult);
+			runResult.Should().Be(0);
 
 			// verify method calls
 			unpackerMock.Verify(u => u.GetManifestFromStream(It.IsAny<Stream>()), Times.Once);

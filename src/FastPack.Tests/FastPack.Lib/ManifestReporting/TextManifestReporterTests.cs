@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FastPack.Lib.Hashing;
 using FastPack.Lib.Logging;
@@ -81,7 +80,7 @@ internal class TextManifestReporterTests
 							CreationDateUtc = new DateTime(2022, 1, 1, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 2, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 3, 1 , 1, 1),
-							FilePermissions = 123
+							FilePermissions = UnixFileMode.OtherExecute
 						}
 					}
 				},
@@ -99,7 +98,7 @@ internal class TextManifestReporterTests
 							CreationDateUtc = new DateTime(2022, 1, 4, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 5, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 6, 1 , 1, 1),
-							FilePermissions = 456
+							FilePermissions = UnixFileMode.OtherWrite
 						},
 						new()
 						{
@@ -107,7 +106,7 @@ internal class TextManifestReporterTests
 							CreationDateUtc = new DateTime(2022, 1, 7, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 8, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 9, 1 , 1, 1),
-							FilePermissions = 789
+							FilePermissions = UnixFileMode.OtherRead
 						}
 					}
 				}
@@ -141,7 +140,7 @@ internal class TextManifestReporterTests
 		loggerMock.Verify(x => x.InfoLine("    Created: " + manifest.Entries[0].FileSystemEntries[0].CreationDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Access: " + manifest.Entries[0].FileSystemEntries[0].LastAccessDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Write: " + manifest.Entries[0].FileSystemEntries[0].LastWriteDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
-		loggerMock.Verify(x => x.InfoLine("    Permissions: 173"), Times.Exactly(1));
+		loggerMock.Verify(x => x.InfoLine("    Permissions: 1"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("Files"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("  subDir/test.txt"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Hash: 1234567890"), Times.Exactly(2));
@@ -150,12 +149,12 @@ internal class TextManifestReporterTests
 		loggerMock.Verify(x => x.InfoLine("    Created: " + manifest.Entries[1].FileSystemEntries[1].CreationDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Access: " + manifest.Entries[1].FileSystemEntries[1].LastAccessDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Write: " + manifest.Entries[1].FileSystemEntries[1].LastWriteDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
-		loggerMock.Verify(x => x.InfoLine("    Permissions: 1425"), Times.Exactly(1));
+		loggerMock.Verify(x => x.InfoLine("    Permissions: 4"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("  test.txt"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Created: " + manifest.Entries[1].FileSystemEntries[0].CreationDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Access: " + manifest.Entries[1].FileSystemEntries[0].LastAccessDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine("    Last Write: " + manifest.Entries[1].FileSystemEntries[0].LastWriteDateUtc.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture)), Times.Exactly(1));
-		loggerMock.Verify(x => x.InfoLine("    Permissions: 710"), Times.Exactly(1));
+		loggerMock.Verify(x => x.InfoLine("    Permissions: 2"), Times.Exactly(1));
 		loggerMock.Verify(x => x.InfoLine(null), Times.Exactly(3));
 		loggerMock.VerifyNoOtherCalls();
 	}

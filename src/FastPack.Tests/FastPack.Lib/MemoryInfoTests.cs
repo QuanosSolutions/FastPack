@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FastPack.Lib;
 using FastPack.Lib.Logging;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

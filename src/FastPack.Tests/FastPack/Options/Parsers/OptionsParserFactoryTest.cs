@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FastPack.Lib.Actions;
 using FastPack.Lib.Logging;
 using FastPack.Options.Parsers;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

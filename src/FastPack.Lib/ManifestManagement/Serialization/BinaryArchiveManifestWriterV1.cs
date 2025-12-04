@@ -56,7 +56,7 @@ public class BinaryArchiveManifestWriterV1 : IArchiveManifestWriter
 							writer.Write(fileSystemEntry.LastWriteDateUtc!.Value.Ticks);
 						}
 						if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions))
-							writer.Write(fileSystemEntry.FilePermissions!.Value);
+							writer.Write((uint)fileSystemEntry.FilePermissions!.Value);
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 ﻿using System;
 using FastPack.Lib.ManifestManagement.Serialization;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.ManifestManagement.Serialization;

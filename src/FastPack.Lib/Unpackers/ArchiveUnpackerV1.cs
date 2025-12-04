@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using FastPack.Lib.Compression;
@@ -27,7 +26,6 @@ internal class ArchiveUnpackerV1 : Unpacker
 	}
 
 	[ExcludeFromCodeCoverage]
-	private FilePermissionInfo FilePermissionInfo { get; } = new();
 	internal IArchiveSerializerFactory SerializerFactory { get; set; } = new ArchiveSerializerFactory();
 	internal IFileCompressorFactory FileCompressorFactory { get; set; } = new FileCompressorFactory();
 	internal Lazy<IManifestReporterFactory> ManifestReporterFactory { get; set; } = new(() => new ManifestReporterFactory());
@@ -148,12 +146,17 @@ internal class ArchiveUnpackerV1 : Unpacker
 	{
 		if (!options.RestorePermissions ||
 		    !manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions) ||
-		    (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX)))
+		    OperatingSystem.IsWindows())
 			return;
 		await Parallel.ForEachAsync(directories, async (target, _) =>
 		{
 			string targetDirectory = Path.Combine(options.OutputDirectoryPath, target.RelativePath);
-			FilePermissionInfo.SetFilePermissions(targetDirectory, target.FilePermissions!.Value);
+			if (target.FilePermissions.HasValue)
+			{
+#pragma warning disable CA1416 // Validate platform compatibility: We checked above that we are not on windows
+				File.SetUnixFileMode(targetDirectory, target.FilePermissions.Value);
+#pragma warning restore CA1416
+			}
 			await Task.CompletedTask;
 		});
 	}
@@ -279,10 +282,12 @@ internal class ArchiveUnpackerV1 : Unpacker
 	{
 		if (!options.RestorePermissions ||
 		    !manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions) ||
-		    (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
-		     !RuntimeInformation.IsOSPlatform(OSPlatform.OSX)))
+		    OperatingSystem.IsWindows())
 			return;
-		FilePermissionInfo.SetFilePermissions(targetFile, manifestFileSystemEntry.FilePermissions!.Value);
+		if (manifestFileSystemEntry.FilePermissions.HasValue)
+		{
+			File.SetUnixFileMode(targetFile, manifestFileSystemEntry.FilePermissions.Value);
+		}
 	}
 
 	private async Task ReadFromDataStream(string inputFile, ManifestEntry manifestEntry, Func<Stream, Task> readFromStreamAction)

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using FastPack.Lib.ManifestManagement;
 using FastPack.Lib.ManifestManagement.Serialization;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

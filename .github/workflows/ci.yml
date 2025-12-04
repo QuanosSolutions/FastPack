@@ -8,16 +8,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout for ${{ matrix.os }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup dotnet for ${{ matrix.os }}
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '10.0.x'
       - name: Build ${{ matrix.os }}
-        working-directory: ./src
-        run: dotnet publish -r ${{ matrix.os }} -c Release -o ../output/${{ matrix.os }} --verbosity q --self-contained True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -p:EnableCompressionInSingleFile=True ./FastPack/FastPack.csproj
+        run: dotnet publish -r ${{ matrix.os }} -c Release -o output/${{ matrix.os }} --verbosity q --self-contained True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -p:EnableCompressionInSingleFile=True ./src/FastPack/FastPack.csproj
       - name: Upload artifacts for ${{ matrix.os }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: FastPack executable ${{ matrix.os }}
           path: |
@@ -30,14 +29,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout for ${{ matrix.os }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup dotnet for ${{ matrix.os }}
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '10.0.x'
       - name: Install dependencies for ${{ matrix.os }}
-        working-directory: ./src
         run: dotnet restore
       - name: Test for ${{ matrix.os }}
-        working-directory: ./src
         run: dotnet test --no-restore --verbosity normal

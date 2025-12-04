@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FastPack.Lib.Actions;
 using FastPack.Lib.Logging;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.Actions

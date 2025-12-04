@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 using FastPack.Lib;
 using FastPack.Lib.Hashing;
 using FastPack.TestFramework;
-using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 

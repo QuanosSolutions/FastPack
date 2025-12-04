@@ -2,7 +2,7 @@
 using FastPack.Lib;
 using FastPack.Lib.Logging;
 using FastPack.Lib.ManifestReporting;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

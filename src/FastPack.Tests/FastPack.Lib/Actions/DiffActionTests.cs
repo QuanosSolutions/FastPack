@@ -13,7 +13,7 @@ using FastPack.Lib.Matching;
 using FastPack.Lib.Options;
 using FastPack.Lib.Unpackers;
 using FastPack.TestFramework.Common;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -95,7 +95,7 @@ internal class DiffActionTests
 						new()
 						{
 							RelativePath = "test.txt",
-							FilePermissions = 321,
+							FilePermissions = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute,
 							CreationDateUtc = new DateTime(2022, 6, 1, 1, 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 6, 2, 1, 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 6, 3, 1, 1, 1),
@@ -103,7 +103,7 @@ internal class DiffActionTests
 						new()
 						{
 							RelativePath = "test3.txt",
-							FilePermissions = 123,
+							FilePermissions = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute,
 							CreationDateUtc = new DateTime(2022, 6, 1, 1, 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 6, 2, 1, 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 6, 3, 1, 1, 1),

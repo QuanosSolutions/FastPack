@@ -1,7 +1,8 @@
 <Project>
 	<PropertyGroup>
-		<VersionMajor>2</VersionMajor>
-		<VersionMinor>1</VersionMinor>
+        <UseArtifactsOutput>true</UseArtifactsOutput>
+		<VersionMajor>3</VersionMajor>
+		<VersionMinor>0</VersionMinor>
 		<VersionPatch>0</VersionPatch>
 		<AssemblyVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).0</AssemblyVersion>
 		<FileVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).0</FileVersion>

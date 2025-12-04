@@ -7,7 +7,7 @@ using FastPack.Lib;
 using FastPack.Lib.Hashing;
 using FastPack.Lib.ManifestManagement;
 using FastPack.Lib.ManifestManagement.Serialization;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.ManifestManagement.Serialization;
@@ -113,7 +113,7 @@ internal class BinaryArchiveManifestWriterReaderV1Tests
 							CreationDateUtc = new DateTime(2022, 1, 1, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 2, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 3, 1 , 1, 1),
-							FilePermissions = 123
+							FilePermissions = UnixFileMode.OtherExecute
 						}
 					}
 				},
@@ -130,7 +130,7 @@ internal class BinaryArchiveManifestWriterReaderV1Tests
 							CreationDateUtc = new DateTime(2022, 1, 4, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 5, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 6, 1 , 1, 1),
-							FilePermissions = 456
+							FilePermissions = UnixFileMode.OtherWrite
 						},
 						new()
 						{
@@ -138,7 +138,7 @@ internal class BinaryArchiveManifestWriterReaderV1Tests
 							CreationDateUtc = new DateTime(2022, 1, 7, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 8, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 9, 1 , 1, 1),
-							FilePermissions = 789
+							FilePermissions = UnixFileMode.OtherRead
 
 						}
 					}

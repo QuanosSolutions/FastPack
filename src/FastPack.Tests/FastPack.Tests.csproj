@@ -1,15 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="SelfContained;PublishTrimmed;RuntimeIdentifier">
+<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="SelfContained;PublishTrimmed;RuntimeIdentifier">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <!-- START: Default-Values for properties to prevent errors during solution publish (TreatAsLocalProperty ensures no override of property values by CLI) -->
     <SelfContained>false</SelfContained>
     <PublishTrimmed>false</PublishTrimmed>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>../FastPack.snk</AssemblyOriginatorKeyFile>
 	<!-- END -->
   </PropertyGroup>
 
@@ -36,24 +32,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.7.0" />
-    <PackageReference Include="FluentAssertions.Analyzers" Version="0.17.2">
+    <PackageReference Include="AwesomeAssertions" />
+    <PackageReference Include="AwesomeAssertions.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="Moq" Version="4.18.1" />
-    <PackageReference Include="Moq.Analyzers" Version="0.0.9">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Moq.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+    <PackageReference Include="JUnitTestLogger" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,21 +56,4 @@
     <ProjectReference Include="..\FastPack.TestFramework\FastPack.TestFramework.csproj" />
     <ProjectReference Include="..\FastPack\FastPack.csproj" />
   </ItemGroup>
-
-  <Target Name="CopyNativeLinuxDependencies" AfterTargets="Build" Condition="'$(NativeDependencyPlatform)' == 'linux-x64'">
-    <ItemGroup>
-      <NativeDependencies Include="$(PkgMono_Posix_NETStandard)/runtimes/linux-x64/native/*.*" />
-    </ItemGroup>
-    <Message Importance="High" Text="&gt;&gt; Copying @(NativeDependencies) to $(TargetDir)" />
-    <Copy SourceFiles="@(NativeDependencies)" DestinationFolder="$(TargetDir)" />
-  </Target>
-
-  <Target Name="CopyNativeOsxDependencies" AfterTargets="Build" Condition="'$(NativeDependencyPlatform)' == 'osx-x64'">
-    <ItemGroup>
-      <NativeDependencies Include="$(PkgMono_Posix_NETStandard)/runtimes/osx/native/*.*" />
-    </ItemGroup>
-    <Message Importance="High" Text="&gt;&gt; Copying @(NativeDependencies) to $(TargetDir)" />
-    <Copy SourceFiles="@(NativeDependencies)" DestinationFolder="$(TargetDir)" />
-  </Target>
-
 </Project>

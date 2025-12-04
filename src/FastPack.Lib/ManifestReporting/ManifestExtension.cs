@@ -67,7 +67,7 @@ internal static class ManifestExtension
 		}
 
 		if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions))
-			manifestReportEntry.Permissions = Convert.ToString(fileSystemEntry.FilePermissions!.Value, 8);
+			manifestReportEntry.Permissions = Convert.ToString((uint)fileSystemEntry.FilePermissions!.Value, 8);
 
 		return manifestReportEntry;
 	}

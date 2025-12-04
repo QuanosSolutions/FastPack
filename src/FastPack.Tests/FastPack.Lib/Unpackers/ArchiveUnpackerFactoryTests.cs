@@ -7,7 +7,7 @@ using FastPack.Lib.ManifestManagement;
 using FastPack.Lib.ManifestManagement.Serialization;
 using FastPack.Lib.Unpackers;
 using FastPack.TestFramework;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

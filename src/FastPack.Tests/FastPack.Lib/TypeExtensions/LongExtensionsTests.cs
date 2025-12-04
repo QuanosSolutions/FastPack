@@ -1,5 +1,5 @@
 ﻿using FastPack.Lib.TypeExtensions;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.TypeExtensions;

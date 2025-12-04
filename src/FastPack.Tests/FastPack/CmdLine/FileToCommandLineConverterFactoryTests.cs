@@ -1,5 +1,5 @@
 ﻿using FastPack.CmdLine;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.CmdLine

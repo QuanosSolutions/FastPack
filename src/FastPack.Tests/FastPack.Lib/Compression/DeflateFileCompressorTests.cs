@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using FastPack.Lib.Compression;
 using FastPack.TestFramework;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.Compression;

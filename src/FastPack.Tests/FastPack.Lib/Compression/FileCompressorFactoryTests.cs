@@ -1,7 +1,7 @@
 ﻿using System;
 using FastPack.Lib.Compression;
 using FastPack.Lib.ManifestManagement;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.Compression;

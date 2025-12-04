@@ -12,7 +12,7 @@ using FastPack.Lib.Options;
 using FastPack.Lib.Unpackers;
 using FastPack.TestFramework;
 using FastPack.TestFramework.Common;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 using System.Collections;

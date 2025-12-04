@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FastPack.Lib.Matching;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace FastPack.Tests.FastPack.Lib.Matching

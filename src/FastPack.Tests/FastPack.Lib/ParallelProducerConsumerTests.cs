@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AwesomeAssertions;
 using FastPack.Lib;
 using FastPack.Lib.TypeExtensions;
 using FastPack.TestFramework.Common;
@@ -35,7 +36,7 @@ public class ParallelProducerConsumerTests
 			},
 			Environment.ProcessorCount,
 			1);
-		Assert.AreEqual(expected, sum);
+		sum.Should().Be(expected);
 	}
 
 	[Test]
@@ -72,7 +73,7 @@ public class ParallelProducerConsumerTests
 			{
 				Interlocked.Decrement(ref currentCountInQueue);
 				//Console.WriteLine($"Size: {currentSize}, Count: {currentCountInQueue}");
-				Assert.GreaterOrEqual(limit, currentSize);
+				limit.Should().BeGreaterThanOrEqualTo(currentSize);
 				await Task.Delay(i.Size * 10);
 				sum += i.Value;
 				Interlocked.Add(ref currentSize, -1 * i.Size);
@@ -80,7 +81,7 @@ public class ParallelProducerConsumerTests
 			},
 			Environment.ProcessorCount,
 			1);
-		Assert.AreEqual(expected, sum);
-		Assert.AreEqual(0, currentSize);
+		sum.Should().Be(expected);
+		currentSize.Should().Be(0);
 	}
 }

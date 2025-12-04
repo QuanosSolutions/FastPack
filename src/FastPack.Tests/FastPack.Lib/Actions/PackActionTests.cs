@@ -15,7 +15,7 @@ using FastPack.Lib.ManifestReporting;
 using FastPack.Lib.Matching;
 using FastPack.Lib.Options;
 using FastPack.TestFramework;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

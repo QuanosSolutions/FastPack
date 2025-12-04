@@ -1,6 +1,6 @@
 package-osx:
   stage: package
-  image: mcr.microsoft.com/dotnet/sdk:6.0.102-focal # https://hub.docker.com/_/microsoft-dotnet-sdk
+  image: mcr.microsoft.com/dotnet/sdk:10.0.100-noble # https://mcr.microsoft.com/en-us/artifact/mar/dotnet/sdk/about
   tags:
     - Kubernetes-PWSH
   rules:

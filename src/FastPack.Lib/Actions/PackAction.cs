@@ -24,7 +24,6 @@ public class PackAction : IAction
 {
 	private ILogger Logger { get; }
 	private PackOptions Options { get; }
-	private FilePermissionInfo FilePermissionInfo { get; } = new();
 	internal IArchiveSerializerFactory ArchiveSerializerFactory { get; set; } = new ArchiveSerializerFactory();
 	internal IHashProviderFactory HashProviderFactory { get; set; } = new HashProviderFactory();
 	internal IFileCompressorFactory FileCompressorFactory { get; set; } = new FileCompressorFactory();
@@ -265,8 +264,8 @@ public class PackAction : IAction
 					manifestFileSystemEntry.LastAccessDateUtc = x.LastAccessTimeUtc;
 					manifestFileSystemEntry.LastWriteDateUtc = x.LastWriteTimeUtc;
 				}
-				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemDates))
-					manifestFileSystemEntry.FilePermissions = FilePermissionInfo.GetFilePermissions(x.FullName);
+				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions) && !OperatingSystem.IsWindows())
+					manifestFileSystemEntry.FilePermissions = File.GetUnixFileMode(x.FullName);
 				return manifestFileSystemEntry;
 			}))
 		};
@@ -299,8 +298,8 @@ public class PackAction : IAction
 					manifestFileSystemEntry.LastAccessDateUtc = file.LastAccessTimeUtc;
 					manifestFileSystemEntry.LastWriteDateUtc = file.LastWriteTimeUtc;
 				}
-				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemDates))
-					manifestFileSystemEntry.FilePermissions = FilePermissionInfo.GetFilePermissions(file.FullName);
+				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions) && !OperatingSystem.IsWindows())
+					manifestFileSystemEntry.FilePermissions = File.GetUnixFileMode(file.FullName);
 				entry.FileSystemEntries.Add(manifestFileSystemEntry);
 			}
 			await Task.CompletedTask;

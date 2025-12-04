@@ -68,8 +68,14 @@ public class BinaryArchiveFileReaderV1 : IArchiveFileReader
 					fileSystemEntry.LastAccessDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
 					fileSystemEntry.LastWriteDateUtc = new DateTime(manifestReader.ReadInt64(), DateTimeKind.Utc);
 				}
+
 				if (manifest.MetaDataOptions.HasFlag(MetaDataOptions.IncludeFileSystemPermissions))
-					fileSystemEntry.FilePermissions = manifestReader.ReadUInt32();
+				{
+					// Compat with old manifests that contained all bits from stat syscall and not just the ones representing the permissions
+					var readUInt32 = manifestReader.ReadUInt32();
+					var validValuesMask = 0x0FFF;
+					fileSystemEntry.FilePermissions = (UnixFileMode) (readUInt32 & validValuesMask);
+				}
 			}
 		}
 		return manifest;

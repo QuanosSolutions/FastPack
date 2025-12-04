@@ -4,7 +4,7 @@ using System.Linq;
 using FastPack.Lib;
 using FastPack.Lib.Matching;
 using FastPack.Lib.Options;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 

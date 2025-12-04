@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using FastPack.Lib.Compression;
 using FastPack.Lib.Hashing;
 using FastPack.Lib.ManifestManagement;
 using FastPack.Lib.ManifestReporting;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -136,7 +137,7 @@ internal class ManifestExtensionTests
 		manifestReport.Folders[0].Created.Should().Be(new DateTime(2022, 1, 1, 1, 1, 1));
 		manifestReport.Folders[0].LastAccess.Should().Be(new DateTime(2022, 1, 2, 1, 1, 1));
 		manifestReport.Folders[0].LastWrite.Should().Be(new DateTime(2022, 1, 3, 1, 1, 1));
-		manifestReport.Folders[0].Permissions.Should().Be("173");
+		manifestReport.Folders[0].Permissions.Should().Be(((uint)UnixFileMode.OtherExecute).ToString());
 		manifestReport.Files[0].RelativePath.Should().Be("subDir/test.txt");
 		manifestReport.Files[0].Hash.Should().Be("1234567890");
 		if (showCompressedSize)
@@ -147,7 +148,7 @@ internal class ManifestExtensionTests
 		manifestReport.Files[0].Created.Should().Be(new DateTime(2022, 1, 7, 1, 1, 1));
 		manifestReport.Files[0].LastAccess.Should().Be(new DateTime(2022, 1, 8, 1, 1, 1));
 		manifestReport.Files[0].LastWrite.Should().Be(new DateTime(2022, 1, 9, 1, 1, 1));
-		manifestReport.Files[0].Permissions.Should().Be("1425");
+		manifestReport.Files[0].Permissions.Should().Be(((uint)UnixFileMode.OtherExecute).ToString());
 		manifestReport.Files[1].RelativePath.Should().Be("test.txt");
 		manifestReport.Files[1].Hash.Should().Be("1234567890");
 		if (showCompressedSize)
@@ -158,7 +159,7 @@ internal class ManifestExtensionTests
 		manifestReport.Files[1].Created.Should().Be(new DateTime(2022, 1, 4, 1, 1, 1));
 		manifestReport.Files[1].LastAccess.Should().Be(new DateTime(2022, 1, 5, 1, 1, 1));
 		manifestReport.Files[1].LastWrite.Should().Be(new DateTime(2022, 1, 6, 1, 1, 1));
-		manifestReport.Files[1].Permissions.Should().Be("710");
+		manifestReport.Files[1].Permissions.Should().Be(((uint)UnixFileMode.OtherExecute).ToString());
 	}
 
 	private static void AssertDetailedDisabled(ManifestReport manifestReport)
@@ -191,7 +192,7 @@ internal class ManifestExtensionTests
 							CreationDateUtc = new DateTime(2022, 1, 1, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 2, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 3, 1 , 1, 1),
-							FilePermissions = 123
+							FilePermissions = UnixFileMode.OtherExecute
 						}
 					}
 				},
@@ -209,7 +210,7 @@ internal class ManifestExtensionTests
 							CreationDateUtc = new DateTime(2022, 1, 4, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 5, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 6, 1 , 1, 1),
-							FilePermissions = 456
+							FilePermissions = UnixFileMode.OtherExecute
 						},
 						new()
 						{
@@ -217,7 +218,7 @@ internal class ManifestExtensionTests
 							CreationDateUtc = new DateTime(2022, 1, 7, 1 , 1, 1),
 							LastAccessDateUtc = new DateTime(2022, 1, 8, 1 , 1, 1),
 							LastWriteDateUtc = new DateTime(2022, 1, 9, 1 , 1, 1),
-							FilePermissions = 789
+							FilePermissions = UnixFileMode.OtherExecute
 						}
 					}
 				}
