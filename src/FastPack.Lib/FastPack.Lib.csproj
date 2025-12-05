@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -19,7 +19,7 @@
     <DebugType>embedded</DebugType>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <DeterministicSourcePaths Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</DeterministicSourcePaths> 
+    <DeterministicSourcePaths Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</DeterministicSourcePaths>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Licenses\FastPackLicense.txt" />
@@ -52,14 +52,6 @@
   </ItemGroup>
 
   <Target Name="AuthenticodeSignAssembly" AfterTargets="Compile" Condition="'$(SignFastpackAssemblies)' == 'true'">
-    <PropertyGroup>
-      <SignToolExecutablePath>C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe</SignToolExecutablePath>
-      <TimeStampServer>http://timestamp.digicert.com</TimeStampServer>
-      <AuthenticodeSignCertificateName>Quanos Solutions GmbH</AuthenticodeSignCertificateName>
-      <SignToolExecutablePathWithParameters>"$(SignToolExecutablePath)" sign /q /a /n "$(AuthenticodeSignCertificateName)" /t $(TimeStampServer)</SignToolExecutablePathWithParameters>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Authenticode signing: $(AssemblyName)$(TargetExt)" />
-    <Exec Command="$(SignToolExecutablePathWithParameters) &quot;$(IntermediateOutputPath)$(AssemblyName)$(TargetExt)&quot;" ConsoleToMsBuild="true" />
+    <Message Importance="High" Text="> Skipping authenticode signing while in Open Source edition." />
   </Target>
 </Project>

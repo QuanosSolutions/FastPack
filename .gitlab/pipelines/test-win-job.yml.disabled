@@ -14,10 +14,10 @@ test-win:
   script:
   - |
     Write-Host "> Running tests"
-    $projectPath = Join-Path $SourceDirPath 'FastPack.Tests/FastPack.Tests.csproj'
-    $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults/tests.junit.xml'
+    $projectPath = Join-Path $SourceDirPath 'FastPack.Tests' 'FastPack.Tests.csproj'
+    $testResultsFilePath = Join-Path $ArtifactsDirectoryPath 'TestResults' 'tests.junit.xml'
     $dotnetArgs = @(
-      'test', "`"$projectPath`"",
+      'test', $projectPath,
       '-c', $Q_Configuration,
       '--nologo',
       '-v', $Q_Verbosity,

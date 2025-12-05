@@ -1,8 +1,5 @@
 package-nuget:
   stage: package
-  tags:
-    - NET6
-    - Windows
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: on_success

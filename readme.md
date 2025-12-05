@@ -43,7 +43,7 @@ Our 270 employees have more than 20 years of market experience and contribute to
 
 True to our motto: **"Passion for smart information"**, we live our mission every day: we empower human to machine communication.
 
-Follow your passion for CODE at Quanos and join our great team. Check out our current vacancies [here](https://karriere.quanos.com/de?id=2f581a).
+Follow your passion for CODE at Quanos and join our great team. Check out our current vacancies [here](https://karriere.quanos.com/de).
 
 # Installation (.NET Global Tool)
 

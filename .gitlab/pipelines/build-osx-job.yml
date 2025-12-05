@@ -1,8 +1,5 @@
 build-osx:
   stage: build
-  image: mcr.microsoft.com/dotnet/sdk:10.0.100-noble # https://mcr.microsoft.com/en-us/artifact/mar/dotnet/sdk/about
-  tags:
-    - Kubernetes-PWSH
   dependencies: []
   needs: []
   artifacts:
@@ -12,9 +9,9 @@ build-osx:
   script:
   - |
     Write-Host "> Running build"
-    $solutionPath = Join-Path $SourceDirPath 'FastPack/FastPack.csproj'
+    $solutionPath = Join-Path $SourceDirPath 'FastPack' 'FastPack.csproj'
     $dotnetArgs = @(
-      'build', "`"$solutionPath`"",
+      'build', $solutionPath,
       '-c', $Q_Configuration,
       '--nologo',
       '--self-contained', 'true',

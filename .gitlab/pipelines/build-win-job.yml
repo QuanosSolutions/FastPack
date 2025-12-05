@@ -1,8 +1,5 @@
 build-win:
   stage: build
-  tags:
-    - NET6
-    - Windows
   dependencies: []
   needs: []
   artifacts:
@@ -12,9 +9,9 @@ build-win:
   script:
   - |
     Write-Host "> Running build"
-    $solutionPath = Join-Path $SourceDirPath 'FastPack/FastPack.csproj'
+    $solutionPath = Join-Path $SourceDirPath 'FastPack' 'FastPack.csproj'
     $dotnetArgs = @(
-      'build', "`"$solutionPath`"",
+      'build', $solutionPath,
       '-c', $Q_Configuration,
       '--nologo',
       '--self-contained', 'true',
