@@ -1,8 +1,5 @@
 package-linux:
   stage: package
-  image: mcr.microsoft.com/dotnet/sdk:10.0.100-noble # https://mcr.microsoft.com/en-us/artifact/mar/dotnet/sdk/about
-  tags:
-    - Kubernetes-PWSH
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: on_success

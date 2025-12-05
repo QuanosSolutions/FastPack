@@ -53,14 +53,6 @@
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
   <Target Name="AuthenticodeSignAssembly" AfterTargets="Compile" Condition="'$(SignFastpackAssemblies)' == 'true'">
-    <PropertyGroup>
-      <SignToolExecutablePath>C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe</SignToolExecutablePath>
-      <TimeStampServer>http://timestamp.digicert.com</TimeStampServer>
-      <AuthenticodeSignCertificateName>Quanos Solutions GmbH</AuthenticodeSignCertificateName>
-      <SignToolExecutablePathWithParameters>"$(SignToolExecutablePath)" sign /q /a /n "$(AuthenticodeSignCertificateName)" /t $(TimeStampServer)</SignToolExecutablePathWithParameters>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Authenticode signing: $(AssemblyName)$(TargetExt)" />
-    <Exec Command="$(SignToolExecutablePathWithParameters) &quot;$(IntermediateOutputPath)$(AssemblyName)$(TargetExt)&quot;" ConsoleToMsBuild="true" />
+    <Message Importance="High" Text="> Skipping authenticode signing while in Open Source edition." />
   </Target>
 </Project>

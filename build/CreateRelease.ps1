@@ -41,7 +41,7 @@ Write-Host "> Creating release"
 Write-Host "> "
 
 if (!$ReleaseRootDirectoryPath) {
-  $ReleaseRootDirectoryPath = Join-Path $PSScriptRoot "../release"
+  $ReleaseRootDirectoryPath = Join-Path $PSScriptRoot ".." "release"
 }
 
 New-Item -Path $releaseRootDirectoryPath -ItemType Directory -Force | Out-Null
