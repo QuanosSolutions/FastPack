@@ -192,8 +192,12 @@ function Invoke-FastpackBuild {
       $AuthenticodeSign
   )
 
-    Write-Host "> Publishing: Runtime=$($_), Config=$Configuration, self-contained=$IncludeRuntime, PublishTrimmed=$($TrimmExecutable -and $IncludeRuntime), IncludeNativeLibrariesForSelfExtract=$IncludeRuntime, OutputFolder=$OutputDirectory"
-    & dotnet @("publish", "-r", $RuntimeIdentifier, "-c", $Configuration, "-o", $OutputDirectory, "--verbosity", $Verbosity, "--self-contained", $IncludeRuntime, "-p:PublishTrimmed=$($TrimmExecutable -and $IncludeRuntime)", "-p:IncludeNativeLibrariesForSelfExtract=$($IncludeRuntime)", $ProjectFilePath, "-p:EnableCompressionInSingleFile=$IncludeRuntime")
+    # Trimming and Compression only works with self-contained deployments
+    $publishArgs = @("publish", "-r", $RuntimeIdentifier, "-c", $Configuration, "-o", $OutputDirectory, "--verbosity", $Verbosity, ($IncludeRuntime ? "--self-contained" : "--no-self-contained") , "-p:PublishTrimmed=$($TrimmExecutable -and $IncludeRuntime)", "-p:IncludeNativeLibrariesForSelfExtract=true", $ProjectFilePath, "-p:EnableCompressionInSingleFile=$($IncludeRuntime)")
+
+    Write-Host "> Publishing: $publishArgs"
+
+    & dotnet $publishArgs
 
     if ($LASTEXITCODE -ne 0 ) {
         throw "Compile failed with exit code $LASTEXITCODE"
